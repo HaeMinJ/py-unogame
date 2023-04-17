@@ -55,10 +55,14 @@ class Networking:
     #     #self.sock.sendall(pickle.dumps(data))
     #     self.current_game = pickle.loads(self.sock.recv(4096))
 
-    def throw_card(self, card: int | Card, ignore: bool = False) -> bool:
-
+    def throw_card(self, userIdx: int, card: int | Card, ignore: bool = False) -> bool:
+        current_user = self.get_user_from_game()
+        print(card, " was requested to thrown")
+        if current_user.id != userIdx:
+            print("Not",userIdx,"Turn! It's", current_user.id, "turn")
+            return False
         if type(card) == int:
-            card_object = self.useur.deck.cards[card]
+            card_object = self.user.deck.cards[card]
         else:
             card_object = card
         result = self.current_game.deck.append_card(card_object, ignore=ignore)
@@ -72,6 +76,7 @@ class Networking:
             if type(card_object) not in [WildChangeColorCard, WildGetFourCard]:
                 # because it will change player after choosing a color
                 self.current_game.next_player()
+                pass
         return result
 
 
