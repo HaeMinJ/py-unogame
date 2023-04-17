@@ -20,7 +20,7 @@ class WildCard(Card):
 class WildGetFourCard(WildCard):
     @staticmethod
     def move(game):
-        game.users[next_player_index(game.cur_user_index, game.direction)].deck.random_cards(4)
+        game.users[game.next_player_index(game.cur_user_index, game.direction)].deck.random_cards(4)
 
 
 @dataclass

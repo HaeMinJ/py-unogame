@@ -3,12 +3,16 @@ from __future__ import annotations
 import pickle
 import time
 
+import pygame.time
+
 from classes.auth.exceptions import WrongCredentials
 from classes.auth.user import User
 from classes.cards.card import Card
 from classes.cards.wild_cards import WildChangeColorCard, WildGetFourCard
 from classes.decks.game_deck import GameDeck
+from classes.enums.colors import Colors
 from classes.game.game import Game
+from utils.card_utility import random_cards
 
 
 class Networking:
@@ -16,8 +20,11 @@ class Networking:
     Networking-singleton для авторизации и обмена состояниями игры
     """
 
-    def __init__(self): #, address: str = socket.gethostname(), port: int = 5499):
-        self.current_game: Game = Game([User(0,"정해민"),User(1,"정해민1",is_ai=True),User(2,"정해민2",is_ai=True),User(3,"정해민3",is_ai=True)], GameDeck())
+    def __init__(self, players=None): #, address: str = socket.gethostname(), port: int = 5499):
+        if players is None:
+            players = [User(0, "Me"), User(1, "Computer1", is_ai=True), User(2, "Computer2", is_ai=True),
+                       User(3, "Computer3", is_ai=True)]
+        self.current_game: Game = Game(players, GameDeck())
         self.current_game.deck.init_random()
         #self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.authorized_user = None
@@ -57,32 +64,43 @@ class Networking:
 
     def throw_card(self, userIdx: int, card: int | Card, ignore: bool = False) -> bool:
         current_user = self.get_user_from_game()
-        print(card, " was requested to thrown")
+        print("Request UserID", userIdx,"CurrentUserId", current_user.id)
         if current_user.id != userIdx:
             print("Not",userIdx,"Turn! It's", current_user.id, "turn")
             return False
+        print(card, " was requested to thrown")
         if type(card) == int:
-            card_object = self.user.deck.cards[card]
+            card_object = current_user.deck.cards[card]
+
         else:
             card_object = card
         result = self.current_game.deck.append_card(card_object, ignore=ignore)
         if result:
-            if len(self.user.deck.cards) == 2 and not self.user.deck.uno_said:
-                self.user.deck.random_cards(2)
+            if len(current_user.deck.cards) == 2 and not current_user.deck.uno_said:
+                current_user.deck.random_cards(2)
             card_object.move(self.current_game)
             if type(card) == int:
-                self.user.deck.cards.pop(card)
-            print(self.current_game.cur_user_index)
+                print("POP card in", current_user)
+                current_user.deck.cards.pop(card)
+            #print(self.current_game.cur_user_index)
             if type(card_object) not in [WildChangeColorCard, WildGetFourCard]:
                 # because it will change player after choosing a color
                 self.current_game.next_player()
                 pass
+            elif current_user.is_ai:
+                pygame.time.delay(1000)
+                import random
+                card = random_cards(color=random.choice([Colors.RED,Colors.BLUE,Colors.GREEN,Colors.YELLOW]))[0]
+                self.throw_card(current_user.id, card, ignore=True)
+                pass
+
         return result
 
 
     def get_card(self) -> bool:
         data = {'type': 'get_card'}
         self.user.deck.random_cards()
+        self.current_game.next_player()
         return True
         # self.sock.sendall(pickle.dumps(data))
         # return pickle.loads(self.sock.recv(2048))
@@ -110,7 +128,7 @@ class Networking:
 
     @property
     def is_our_move(self) -> bool:
-        return self.current_game.cur_user_index == self.user_id(self.get_user_from_game())
+        return self.current_game.cur_user_index == 0 #self.user_id(self.get_user_from_game())
 
     # def __del__(self):
     #     self.sock.close()

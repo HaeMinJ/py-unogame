@@ -21,17 +21,26 @@ class Game:
 
     @property
     def is_started(self) -> bool:
-        return True if len(self.users) == 4 else False
+        return True #if len(self.users) == 4 else False
 
     def next_player(self):
-        print("Next Player function called!")
+        print("Next Player function called! From : ", self.cur_user_index)
         if self.direction == Directions.CLOCKWISE:
-            if self.cur_user_index != 3:
-                self.cur_user_index += 1
-            else:
-                self.cur_user_index = 0
+            self.cur_user_index=(self.cur_user_index+1)%len(self.users)
+            # if self.cur_user_index != 3:
+            #     self.cur_user_index += 1
+            # else:
+            #     self.cur_user_index = 0
         elif self.direction == Directions.COUNTER_CLOCKWISE:
-            if self.cur_user_index != 0:
-                self.cur_user_index -= 1
-            else:
-                self.cur_user_index = 3
+            self.cur_user_index = (self.cur_user_index-1) % len(self.users)
+            # if self.cur_user_index != 0:
+            #     self.cur_user_index -= 1
+            # else:
+            #     self.cur_user_index = 3
+        print("To : ", self.cur_user_index)
+
+    def next_player_index(self,cur_index: int, direction: Directions) -> int:
+        if direction == Directions.CLOCKWISE:
+            return (cur_index+1)%len(self.users)
+        elif direction == Directions.COUNTER_CLOCKWISE:
+            return (cur_index - 1) % len(self.users)

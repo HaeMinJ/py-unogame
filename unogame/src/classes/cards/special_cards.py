@@ -21,7 +21,19 @@ class SpecialCard(Card):
 class GetTwoCard(SpecialCard):
     @staticmethod
     def move(game):
-        game.users[next_player_index(game.cur_user_index, game.direction)].deck.random_cards(2)
+        game.users[game.next_player_index(game.cur_user_index, game.direction)].deck.random_cards(2)
+
+@dataclass
+class GetOneCard(SpecialCard):
+    @staticmethod
+    def move(game):
+        game.users[game.next_player_index(game.cur_user_index, game.direction)].deck.random_cards(1)
+
+@dataclass
+class GetThreeCard(SpecialCard):
+    @staticmethod
+    def move(game):
+        game.users[game.next_player_index(game.cur_user_index, game.direction)].deck.random_cards(3)
 
 
 @dataclass

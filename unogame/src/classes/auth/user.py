@@ -11,7 +11,7 @@ class User:
     deck: PlayerDeck = None
     points: int = 0
     uno_said: bool = False
-    is_ai: bool = False
+    is_ai: bool = True
 
     def __post_init__(self):
         self.deck = PlayerDeck()
