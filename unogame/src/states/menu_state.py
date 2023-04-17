@@ -20,5 +20,9 @@ class MenuState(GameState):
             self.inactive_overlay(overlay_name.CONFIGURATION)
         else:
             self.active_overlay(overlay_name.CONFIGURATION)
+
+    def open_story_play(self):
+        self.move_scene(scene_name.STORY_MAP_SCENE)
+
     def exit(self):
         pygame.quit()

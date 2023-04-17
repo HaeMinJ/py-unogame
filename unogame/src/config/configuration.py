@@ -1,13 +1,17 @@
 # Screen dimensions
+import copy
+
 from utils import blind_mode_name
 import pygame
 import json
 
 from utils import action_name
+import unittest
 
 BLIND_MODE = blind_mode_name.DEFAULT
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
+CURRENT_STAGE = 0
 
 KEYBOARD_MAP = {
     pygame.K_UP: action_name.MOVE_UP,
@@ -43,14 +47,63 @@ def save_config_to_file():
         "BLIND_MODE" : BLIND_MODE,
         "SCREEN_HEIGHT" : SCREEN_HEIGHT,
         "SCREEN_WIDTH" : SCREEN_WIDTH,
-        "keybinding" : keybindings
+        "keybinding" : keybindings,
+        "CURRENT_STAGE": CURRENT_STAGE
     }
     with open("config.json", "w") as f:
         json.dump(configurations, f)
+    return configurations
 
 
 def load_config_from_file():
     with open("config.json", "r") as f:
         configurations = json.load(f)
         print(configurations)
-#return {int(key): action for key, action in keybindings.items()}
+    convert_to_current_config(configurations)
+    convert_keybinding(configurations["keybinding"])
+    return configurations
+
+def convert_to_current_config(configurations):
+    global BLIND_MODE
+    global SCREEN_WIDTH
+    global SCREEN_HEIGHT
+    global CURRENT_STAGE
+    BLIND_MODE=configurations["BLIND_MODE"]
+    SCREEN_WIDTH=configurations["SCREEN_WIDTH"]
+    SCREEN_HEIGHT=configurations["SCREEN_HEIGHT"]
+    CURRENT_STAGE=configurations["CURRENT_STAGE"]
+
+def convert_keybinding(keybindings):
+    global KEYBOARD_MAP
+    keybindings={int(key): action for key, action in keybindings.items()}
+    KEYBOARD_MAP=keybindings
+    print(keybindings)
+    return keybindings
+
+
+
+class TestConfigurationSetting(unittest.TestCase):
+
+    def test_save_load(self):
+        self.assertEqual(save_config_to_file(), load_config_from_file())
+
+
+    def test_load_color_blind(self):
+        global BLIND_MODE
+        a=copy.deepcopy(BLIND_MODE)
+        BLIND_MODE="deutranopia"
+        save_config_to_file()
+        load_config_from_file()
+        print(a, BLIND_MODE)
+        self.assertNotEqual(a, BLIND_MODE)
+
+    def test_load_keybindings(self):
+        global KEYBOARD_MAP
+        a = copy.deepcopy(KEYBOARD_MAP)
+        save_config_to_file()
+        self.assertDictEqual(a, convert_keybinding(load_config_from_file()['keybinding']))
+
+
+
+if __name__ == '__main__':
+    unittest.main()

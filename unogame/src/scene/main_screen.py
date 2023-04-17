@@ -17,6 +17,7 @@ from utils.image_utility import load_image
 from utils.text_utility import truncate
 import time
 
+
 class EventGroup(pygame.sprite.Group):
     def __init__(self, *sprites):
         super().__init__(*sprites)
@@ -49,7 +50,7 @@ class UnoButton(pygame.sprite.Sprite):
                 self.frames.append(sheet.subsurface(pygame.Rect(
                     frame_location, self.rect.size)))
 
-    def handle_events(self, event:  Event):
+    def handle_events(self, event: Event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.is_active:
                 self.networking.say_uno()
@@ -116,9 +117,9 @@ class CardGiver(pygame.sprite.Sprite):
 
     def handle_events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
-                if self.is_active:
-                    if self.networking.is_our_move:
-                        self.networking.get_card()
+            if self.is_active:
+                if self.networking.is_our_move:
+                    self.networking.get_card()
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if self.rect.collidepoint(pygame.mouse.get_pos()):
@@ -158,8 +159,12 @@ class ColorChooser(pygame.sprite.Sprite):
                 card = random_cards(color=Colors.YELLOW)[0]
             if self._active_color == (1, 1):
                 card = random_cards(color=Colors.BLUE)[0]
-            self.networking.throw_card(card, ignore=True)
-            self.networking.current_game.next_player()
+            self.networking.throw_card(self.networking.user.id, card, ignore=True)
+            # self.networking.current_game.next_player()
+            # time.sleep(1)
+            return
+
+
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         self.image.fill((0, 0, 0, 0))
@@ -194,13 +199,13 @@ class Cards(pygame.sprite.Sprite):
         self.rotation = rotation
 
     def handle_events(self, event):
-        if event.type== pygame.MOUSEBUTTONDOWN:
-                if self._active_card_index >= 0 and \
-                        self.networking.is_our_move:
-                    self.networking.throw_card(self._active_card_index)
-                else:
-                    pass  # TODO: play some sound when you cant throw a card
-                    # (because it is not your way)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self._active_card_index >= 0 and \
+                    self.networking.is_our_move:
+                self.networking.throw_card(self.networking.user.id, self._active_card_index)
+            else:
+                pass  # TODO: play some sound when you cant throw a card
+                # (because it is not your way)
 
     def update(self, *args: Any, **kwargs: Any):
         deck = self.networking.current_game.users[self.user_id].deck
@@ -315,11 +320,11 @@ class MainScreen(Scene):
             'self': Cards(self._player_indexes['self'], (1280 / 2) - 300, 600, self.networking,
                           self._all_cards, is_blank=False),
             'right': Cards(self._player_indexes['right'], 1160, 160, self.networking,
-                           self._all_cards, rotation=270, max_width=320),
+                           self._all_cards, rotation=270, max_width=320, is_blank=False),
             'left': Cards(self._player_indexes['left'], -60, 160, self.networking, self._all_cards,
-                          rotation=90, max_width=320),
+                          rotation=90, max_width=320, is_blank=False),
             'opposite': Cards(self._player_indexes['opposite'], (1280 / 2) - 195, -60,
-                              self.networking, self._all_cards, rotation=180, max_width=320)
+                              self.networking, self._all_cards, rotation=180, max_width=320, is_blank=False)
         }
         self._users_names = {
             'self': UserInfo(169, 533, self.networking, self._player_indexes['self'],
@@ -362,12 +367,19 @@ class MainScreen(Scene):
         #     time.sleep(1)
         #     self.networking.current_game.next_player()
 
-
     def process_events(self, event):
-
-        if self.networking.get_user_from_game().is_ai:
-            print("AI Turn", self.networking.get_user_from_game().name)
-            time.sleep(1)
+        # if self.networking.get_user_from_game().is_ai:
+        #     print("AI Turn", self.networking.get_user_from_game().name)
+        #     #time.sleep(1)
+        #     self.networking.throw_card(self.networking.get_user_from_game().deck.cards[0])
+        #     #time.sleep(3)
+        #     self.networking.current_game.next_player()
+        cur_user = self.networking.get_user_from_game()
+        if cur_user.is_ai:
+            print("AI Turn", cur_user.name)
+            #time.sleep(1)
+            self.networking.throw_card(cur_user.id, self.networking.get_user_from_game().deck.cards[0])
+            #time.sleep(3)
             self.networking.current_game.next_player()
         self._miscellaneous_group.handle_events(event)
         self._all_cards.handle_events(event)
@@ -383,4 +395,3 @@ class MainScreen(Scene):
     def _handle_events(self, event: Event):
         if event.type == Cards.CARD_END:
             self.is_running = False
-

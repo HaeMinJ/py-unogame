@@ -40,7 +40,7 @@ class MenuScene(Scene):
             manager=self.gui_manager
         )
 
-        self.scroll_buttons_text = ["Single Play", "Configuration", "Exit", "Test2", "Test3"]
+        self.scroll_buttons_text = ["Single Play", "StoryMode Play"]
 
         self.scrollable_buttons = []
         self.scroll_offset_x = 0
@@ -107,6 +107,17 @@ class MenuScene(Scene):
         self.focusable_buttons.extend([btn_setting, btn_ranking, btn_exit])
 
     def process_events(self, event):
+        if event.type == pygame.USEREVENT:
+            if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                print(event.ui_element)
+                if event.ui_element == self.scrollable_buttons[0]:
+                    self.state.start_single_play()
+                elif event.ui_element == self.scrollable_buttons[1]:
+                    self.state.open_story_play()
+                elif event.ui_element == self.focusable_buttons[2]:
+                    self.state.open_configuration()
+                elif event.ui_element == self.focusable_buttons[4]:
+                    self.state.exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 4 or event.button == 1:  # Mouse wheel up
                 self.target_scroll_offset_x += vw(60)
@@ -142,19 +153,13 @@ class MenuScene(Scene):
                 if ui_element == self.scrollable_buttons[0]:
                     self.state.start_single_play()
                 elif ui_element == self.scrollable_buttons[1]:
+                    self.state.open_story_play()
+                elif ui_element == self.focusable_buttons[2]:
                     self.state.open_configuration()
-                elif ui_element == self.scrollable_buttons[2]:
+                elif ui_element == self.focusable_buttons[4]:
                     self.state.exit()
 
-        if event.type == pygame.USEREVENT:
-            if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
-                print(event.ui_element)
-                if event.ui_element == self.scrollable_buttons[0]:
-                    self.state.start_single_play()
-                elif event.ui_element == self.scrollable_buttons[1]:
-                    self.state.open_configuration()
-                elif event.ui_element == self.scrollable_buttons[2]:
-                    self.state.exit()
+
 
     def draw(self):
         self.screen.blit(self.main_image, (0, 0))
