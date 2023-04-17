@@ -299,18 +299,18 @@ _PLAYER_INDEXES = {
 
 
 class MainScreen(Scene):
-    def __init__(self, surface: Surface, manager: pygame_gui.UIManager, networking: Networking):
-        super().__init__(surface, manager)
-        # self.next_screen = LandingScene()
-        self.networking = networking
+    def __init__(self, screen, manager: pygame_gui.UIManager, params=None):
+        super().__init__(screen, manager, params)
+        self.networking = Networking()
+        print(params)
         self.gui_manager = manager
-        self.surface = surface
+        self.surface = screen
         self._miscellaneous_group = EventGroup()
         DirectionSprite(self.networking, self._miscellaneous_group)
 
         self._all_cards = EventGroup()
         self._game_deck = pygame.sprite.Group()
-        self._color_chooser = ColorChooser(540, 260, networking, self._miscellaneous_group)
+        self._color_chooser = ColorChooser(540, 260, self.networking, self._miscellaneous_group)
         self._card_giver = CardGiver(175, 20, self.networking, self._miscellaneous_group)
         self._uno_button = UnoButton(1060, 560, self.networking, self._miscellaneous_group)
         self._player_indexes = _PLAYER_INDEXES[
