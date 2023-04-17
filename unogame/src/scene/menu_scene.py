@@ -18,8 +18,8 @@ class MenuScene(Scene):
         self.create_scrollable_buttons()
         self.create_below_buttons()
 
-    def __init__(self, screen, gui_manager):
-        super().__init__(screen, gui_manager)
+    def __init__(self, screen, gui_manager, params=None):
+        super().__init__(screen, gui_manager, params)
 
         self.sound_toggle_button = None
         self.state = MenuState()

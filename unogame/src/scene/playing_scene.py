@@ -17,9 +17,10 @@ class PlayingScene(Scene):
         self.create_card_buttons()
         self.create_side_buttons()
 
-    def __init__(self, screen, gui_manager):  # , image_loader: ImageLoader):
-        super().__init__(screen, gui_manager)  # , image_loader)
+    def __init__(self, screen, gui_manager, params=None):  # , image_loader: ImageLoader):
+        super().__init__(screen, gui_manager, params)  # , image_loader)
         self.state = PlayingState()
+        print(params)
 
         self.card_stack = pygame.image.load("assets/playing_game_img/card_stack.png")
         self.btn_deck = pygame.image.load("assets/playing_game_img/deck.png")
