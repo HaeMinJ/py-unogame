@@ -4,7 +4,7 @@ from pygame.surface import Surface
 
 from classes.cards.card import Card
 from classes.cards.numeric_card import NumericCard
-from classes.cards.special_cards import SkipCard, ReverseCard, GetTwoCard
+from classes.cards.special_cards import SkipCard, ReverseCard, GetTwoCard, GetOneCard, GetThreeCard
 from classes.cards.wild_cards import WildChangeColorCard, WildGetFourCard
 from classes.enums.colors import Colors
 from classes.enums.directions import Directions
@@ -13,8 +13,10 @@ _CARD_ID = {
     SkipCard: 10,
     ReverseCard: 11,
     GetTwoCard: 12,
-    WildChangeColorCard: 13,
-    WildGetFourCard: 14,
+    GetOneCard: 13,
+    GetThreeCard: 14,
+    WildChangeColorCard: 15,
+    WildGetFourCard: 16,
 }
 
 _CARD_COLOR = {
@@ -33,7 +35,7 @@ for i in range(2):
         for num in range(0, 10) if i == 0 else range(1, 10):
             COLOR_CARDS.append(NumericCard(color, num))
         # специальные карты
-        for card in [SkipCard, ReverseCard, GetTwoCard]:
+        for card in [SkipCard, ReverseCard, GetTwoCard, GetOneCard, GetThreeCard]:
             OTHER_CARDS.append(card(color))
 # дикие карты
 for i in range(4):
@@ -54,9 +56,9 @@ def card_image(card_set: Surface, card) -> Surface:
                                     180 * _CARD_COLOR[card.color],
                                     120, 180)
     elif isinstance(card, WildChangeColorCard):
-        image = card_set.subsurface(120 * 13, 0, 120, 180)
+        image = card_set.subsurface(120 * 15, 0, 120, 180)
     elif isinstance(card, WildGetFourCard):
-        image = card_set.subsurface(120 * 13, 180, 120, 180)
+        image = card_set.subsurface(120 * 15, 180, 120, 180)
     else:
         image = card_set.subsurface(120 * _CARD_ID[card.__class__],
                                     180 * _CARD_COLOR[card.color],

@@ -9,7 +9,7 @@ class LobbyState(GameState):
         self.changed = False
 
     def start_single_play(self, players):
-        self.move_scene(scene_name.PLAYING_GAME, players)
+        self.move_scene(scene_name.PLAYING_SCENE, players)
 
     def open_configuration(self):
         self.active_overlay(overlay_name.CONFIGURATION)

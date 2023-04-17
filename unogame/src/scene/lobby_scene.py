@@ -33,7 +33,7 @@ class LobbyScene(Scene):
         self.player_bg_height = vh(90)
         self.player_bg_margin = vh(13)
 
-        self.players = [User(0, "player1")]
+        self.players = [User(1, "player1")]
         self.set_player_buttons = []
         self.move_scene_buttons = []
 
@@ -64,7 +64,7 @@ class LobbyScene(Scene):
             object_id=ObjectID(object_id=f"button_b_1", class_id="@lobby_below_btns")
         )
         btn_right = FocusableUIButton(
-            relative_rect=pygame.Rect((SCREEN_WIDTH-100, SCREEN_HEIGHT - 100), vp(64.95, 57)),
+            relative_rect=pygame.Rect((SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100), vp(64.95, 57)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_2", class_id="@lobby_below_btns")
@@ -113,11 +113,13 @@ class LobbyScene(Scene):
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.set_player_buttons[0]:
                     if len(self.players) < 5:
-                        self.players.append(User(len(self.players), f"player{len(self.players)+1}"))
+                        self.players.append(User(len(self.players) + 1, f"player{len(self.players) + 1}", is_ai=True))
                 if event.ui_element == self.set_player_buttons[1]:
                     if len(self.players) > 1:
                         self.players.pop()
                 if event.ui_element == self.move_scene_buttons[1]:
+                    self.player_name = self.text_input.get_text()
+                    self.players.insert(0, User(0, self.player_name, is_ai=False))
                     self.state.start_single_play(players=self.players)
                 if event.ui_element == self.move_scene_buttons[0]:
                     self.state.move_scene(scene_name.MAIN_MENU)
@@ -135,10 +137,10 @@ class LobbyScene(Scene):
             x = SCREEN_WIDTH / 2 - vw(33)
             y = vh(107) + i * (self.player_bg_height + self.player_bg_margin)
             self.screen.blit(self.other_player_bg, vp(x, y))
-            self.screen.blit(self.player_profile, vp((SCREEN_WIDTH / 2 + vw(82)), vh(118) + i * (self.player_bg_height + self.player_bg_margin)))
+            self.screen.blit(self.player_profile, vp((SCREEN_WIDTH / 2 + vw(82)),
+                                                     vh(118) + i * (self.player_bg_height + self.player_bg_margin)))
             self.screen.blit(player_name, vp(vw(SCREEN_WIDTH / 2 + vw(180)), vh(y + vh(20))))
 
         self.gui_manager.draw_ui(self.screen)
         self.screen.blit(add_player_text, vp(vw(172 + 43), SCREEN_HEIGHT - 200 + 18))
         self.screen.blit(remove_player_text, vp(vw(350 + 15), SCREEN_HEIGHT - 200 + 18))
-
