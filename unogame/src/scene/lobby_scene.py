@@ -20,7 +20,6 @@ class LobbyScene(Scene):
     def __init__(self, screen, gui_manager):
         super().__init__(screen, gui_manager)
         self.state = LobbyState()
-        self.current_focused_button = -1
 
         self.lobby_image = pygame.image.load("assets/lobby_img/lobby_bg.png")
         self.btn_left = pygame.image.load("assets/lobby_img/btn_left.png")
