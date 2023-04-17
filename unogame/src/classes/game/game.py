@@ -24,6 +24,7 @@ class Game:
         return True if len(self.users) == 4 else False
 
     def next_player(self):
+        print("Next Player function called!")
         if self.direction == Directions.CLOCKWISE:
             if self.cur_user_index != 3:
                 self.cur_user_index += 1
