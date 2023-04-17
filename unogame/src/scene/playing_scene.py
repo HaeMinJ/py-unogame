@@ -1,7 +1,7 @@
 import pygame
 from pygame_gui.core import ObjectID
 from pygame_gui.elements import UIButton
-from config.configuration import SCREEN_WIDTH, SCREEN_HEIGHT, vw, vh, vp, KEYBOARD_MAP
+from config.configuration import SCREEN_WIDTH, SCREEN_HEIGHT, vw, vh, vp, KEYBOARD_MAP, get_action
 
 from assets import image_keys
 from assets.image_loader import ImageLoader

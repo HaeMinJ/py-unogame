@@ -5,12 +5,11 @@ from pygame_gui.core import ObjectID
 from config.configuration import SCREEN_WIDTH, SCREEN_HEIGHT, vw, vh, vp, KEYBOARD_MAP, get_action
 
 from scene import Scene
-from states.lobby_state import LobbyState
+from states import LobbyState
 from utils import action_name, overlay_name, scene_name
 from utils.image_utility import load_image
 from widgets import FocusableUIButton
 from classes.auth.user import User
-
 
 
 class LobbyScene(Scene):
@@ -21,7 +20,6 @@ class LobbyScene(Scene):
     def __init__(self, screen, gui_manager, params=None):
         super().__init__(screen, gui_manager, params)
         self.state = LobbyState()
-        self.focusable_buttons = []
 
         self.lobby_image = load_image("lobby_img/lobby_bg.png")
         self.btn_left = load_image("lobby_img/btn_left.png")
@@ -29,16 +27,24 @@ class LobbyScene(Scene):
         self.player_bg = load_image("lobby_img/player_bg.png")
         self.other_player_bg = load_image("lobby_img/other_player_bg.png")
         self.btn_set_player = load_image("lobby_img/btn_set_player.png")
+        self.player_profile = load_image("lobby_img/player_profile.png")
 
         self.player_bg_width = vw(512)
         self.player_bg_height = vh(90)
         self.player_bg_margin = vh(13)
 
         self.players = [User(0, "player1")]
-        self.set_player_buttons =[]
+        self.set_player_buttons = []
+        self.move_scene_buttons = []
 
         self.resize_images()
         self.initialize_elements()
+
+        self.text_input = pygame_gui.elements.UITextEntryLine(
+            relative_rect=pygame.Rect(vp(223, 171), vp(235, 52)),
+            manager=self.gui_manager,
+        )
+        self.player_name = ""
 
     def resize_images(self):
         super().resize_images()
@@ -48,6 +54,7 @@ class LobbyScene(Scene):
         self.player_bg = pygame.transform.scale(self.player_bg, vp(338, 400))
         self.other_player_bg = pygame.transform.scale(self.other_player_bg, vp(512, 90))
         self.btn_set_player = pygame.transform.scale(self.btn_set_player, vp(160, 83))
+        self.player_profile = pygame.transform.scale(self.player_profile, vp(70, 66))
 
     def create_below_buttons(self):
         btn_left = FocusableUIButton(
@@ -68,6 +75,7 @@ class LobbyScene(Scene):
         btn_left.drawable_shape.active_state.has_fresh_surface = True
         btn_right.drawable_shape.active_state.has_fresh_surface = True
         self.focusable_buttons.extend([btn_left, btn_right])
+        self.move_scene_buttons.extend([btn_left, btn_right])
 
     def create_set_player_buttons(self):
         btn_add_player = FocusableUIButton(
@@ -90,23 +98,29 @@ class LobbyScene(Scene):
         self.set_player_buttons.extend([btn_add_player, btn_remove_player])
 
     def process_events(self, event):
-        if event.type == pygame.KEYDOWN:
-            key_event = event.key
-            action = get_action(key_event)
-            if action == action_name.RETURN:
-                self.state.start_single_play(self.players)
-            if action == action_name.PAUSE:
-                self.state.active_overlay(overlay_name.CONFIGURATION)
+
+        if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
+            if event.ui_element == self.text_input:
+                self.player_name = self.text_input.get_text()
+        # if event.type == pygame.KEYDOWN:
+        #     key_event = event.key
+        #     action = get_action(key_event)
+        #     if action == action_name.RETURN:
+        #         self.state.start_single_play(self.players)
+        #     if action == action_name.PAUSE:
+        #         self.state.active_overlay(overlay_name.CONFIGURATION)
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.set_player_buttons[0]:
                     if len(self.players) < 5:
-                        self.players.append(User(len(self.players), f"플레이어{len(self.players)}"))
+                        self.players.append(User(len(self.players), f"player{len(self.players)+1}"))
                 if event.ui_element == self.set_player_buttons[1]:
                     if len(self.players) > 1:
                         self.players.pop()
-                if event.ui_element == self.focusable_buttons[3]:
-                    self.state.move_scene(scene_name.PLAYING_SCENE, self.players)
+                if event.ui_element == self.move_scene_buttons[1]:
+                    self.state.start_single_play(players=self.players)
+                if event.ui_element == self.move_scene_buttons[0]:
+                    self.state.move_scene(scene_name.MAIN_MENU)
 
     def draw(self):
         font = pygame.font.SysFont('arial', 40)
@@ -117,10 +131,14 @@ class LobbyScene(Scene):
         self.screen.blit(self.player_bg, vp(172, 109))
 
         for i in range(len(self.players)):
+            player_name = font.render(self.players[i].name, True, (255, 255, 255))
             x = SCREEN_WIDTH / 2 - vw(33)
-            y = 107 + i * (self.player_bg_height + self.player_bg_margin)
+            y = vh(107) + i * (self.player_bg_height + self.player_bg_margin)
             self.screen.blit(self.other_player_bg, vp(x, y))
+            self.screen.blit(self.player_profile, vp((SCREEN_WIDTH / 2 + vw(82)), vh(118) + i * (self.player_bg_height + self.player_bg_margin)))
+            self.screen.blit(player_name, vp(vw(SCREEN_WIDTH / 2 + vw(180)), vh(y + vh(20))))
 
         self.gui_manager.draw_ui(self.screen)
-        self.screen.blit(add_player_text, (vw(172 + 43), SCREEN_HEIGHT - 200 + 18))
-        self.screen.blit(remove_player_text, (vw(350 + 15), SCREEN_HEIGHT - 200 + 18))
+        self.screen.blit(add_player_text, vp(vw(172 + 43), SCREEN_HEIGHT - 200 + 18))
+        self.screen.blit(remove_player_text, vp(vw(350 + 15), SCREEN_HEIGHT - 200 + 18))
+

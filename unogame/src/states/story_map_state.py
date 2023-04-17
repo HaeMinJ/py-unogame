@@ -7,4 +7,4 @@ class StoryMapState(GameState):
         super().__init__()
 
     def start_single_play(self):
-        pass
+        self.move_scene(scene_name.PLAYING_GAME)
