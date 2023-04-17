@@ -33,7 +33,7 @@ class SceneManager:
         }
         networking = Networking()
         main = MainScreen(screen,gui_manager,networking)
-        self.current_scene = self.scenes[scene_name.LOBBY_SCENE](screen, gui_manager)
+        self.current_scene = main#self.scenes[scene_name.LOBBY_SCENE](screen, gui_manager)
         self.current_overlay = self.overlay_scenes[overlay_name.CONFIGURATION](screen, overlay_manager)
 
 
