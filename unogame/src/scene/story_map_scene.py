@@ -1,7 +1,7 @@
 import pygame
 import pygame_gui
 from pygame_gui.core import ObjectID
-from config.configuration import SCREEN_WIDTH, SCREEN_HEIGHT, vw, vh, vp, KEYBOARD_MAP
+from config.configuration import get_screen_width, get_screen_height, vw, vh, vp, KEYBOARD_MAP
 
 from scene import Scene
 from states.story_map_state import StoryMapState
@@ -40,7 +40,7 @@ class StoryMapScene(Scene):
 
     def resize_images(self):
         super().resize_images()
-        self.story_map_bg = pygame.transform.scale(self.story_map_bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.story_map_bg = pygame.transform.scale(self.story_map_bg, (get_screen_width(), get_screen_height()))
         self.stage_1 = pygame.transform.scale(self.stage_1, vp(340, 346))
         self.stage_2 = pygame.transform.scale(self.stage_2, vp(340, 346))
         self.stage_3 = pygame.transform.scale(self.stage_3, vp(340, 346))
@@ -60,19 +60,19 @@ class StoryMapScene(Scene):
             object_id=ObjectID(object_id=f"button_b_1", class_id="@stage_btn")
         )
         btn_stage_2 = FocusableUIButton(
-            relative_rect=pygame.Rect((vw(256), SCREEN_HEIGHT - 380), vp(217, 239)),
+            relative_rect=pygame.Rect((vw(256), get_screen_height() - 380), vp(217, 239)),
             text="stage2",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@stage_btn")
         )
         btn_stage_3 = FocusableUIButton(
-            relative_rect=pygame.Rect((vw(635), SCREEN_HEIGHT - 175), vp(245, 156)),
+            relative_rect=pygame.Rect((vw(635), get_screen_height() - 175), vp(245, 156)),
             text="stage3",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@stage_btn")
         )
         btn_stage_4 = FocusableUIButton(
-            relative_rect=pygame.Rect((vw(939), SCREEN_HEIGHT - 557), vp(306, 437)),
+            relative_rect=pygame.Rect((vw(939), get_screen_height() - 557), vp(306, 437)),
             text="stage4",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@stage_btn")

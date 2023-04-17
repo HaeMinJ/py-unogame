@@ -1,1 +1,1 @@
-from .configuration import SCREEN_WIDTH, SCREEN_HEIGHT, vw, vh, vp, BLIND_MODE, get_action
+from .configuration import get_screen_width, get_screen_height, vw, vh, vp, BLIND_MODE, get_action

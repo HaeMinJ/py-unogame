@@ -2,7 +2,7 @@ import pygame
 import pygame_gui
 from pygame_gui.core import ObjectID
 
-from config.configuration import SCREEN_WIDTH, SCREEN_HEIGHT, vw, vh, vp, KEYBOARD_MAP, get_action
+from config.configuration import get_screen_width, get_screen_height, vw, vh, vp, KEYBOARD_MAP, get_action
 
 from scene import Scene
 from states import LobbyState
@@ -48,7 +48,7 @@ class LobbyScene(Scene):
 
     def resize_images(self):
         super().resize_images()
-        self.lobby_image = pygame.transform.scale(self.lobby_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.lobby_image = pygame.transform.scale(self.lobby_image, (get_screen_width(), get_screen_height()))
         self.btn_left = pygame.transform.scale(self.btn_left, vp(64.95, 57))
         self.btn_right = pygame.transform.scale(self.btn_right, vp(64.95, 57))
         self.player_bg = pygame.transform.scale(self.player_bg, vp(338, 400))
@@ -58,13 +58,13 @@ class LobbyScene(Scene):
 
     def create_below_buttons(self):
         btn_left = FocusableUIButton(
-            relative_rect=pygame.Rect((vw(50), SCREEN_HEIGHT - 100), vp(64.95, 57)),
+            relative_rect=pygame.Rect((vw(50), get_screen_height() - 100), vp(64.95, 57)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@lobby_below_btns")
         )
         btn_right = FocusableUIButton(
-            relative_rect=pygame.Rect((SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100), vp(64.95, 57)),
+            relative_rect=pygame.Rect((get_screen_width() - 100, get_screen_height() - 100), vp(64.95, 57)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_2", class_id="@lobby_below_btns")
@@ -79,13 +79,13 @@ class LobbyScene(Scene):
 
     def create_set_player_buttons(self):
         btn_add_player = FocusableUIButton(
-            relative_rect=pygame.Rect((vw(172), SCREEN_HEIGHT - 200), vp(160, 83)),
+            relative_rect=pygame.Rect((vw(172), get_screen_height() - 200), vp(160, 83)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@lobby_add_btns")
         )
         btn_remove_player = FocusableUIButton(
-            relative_rect=pygame.Rect((vw(350), SCREEN_HEIGHT - 200), vp(160, 83)),
+            relative_rect=pygame.Rect((vw(350), get_screen_height() - 200), vp(160, 83)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@lobby_remove_btns")
@@ -134,13 +134,13 @@ class LobbyScene(Scene):
 
         for i in range(len(self.players)):
             player_name = font.render(self.players[i].name, True, (255, 255, 255))
-            x = SCREEN_WIDTH / 2 - vw(33)
+            x = get_screen_width() / 2 - vw(33)
             y = vh(107) + i * (self.player_bg_height + self.player_bg_margin)
             self.screen.blit(self.other_player_bg, vp(x, y))
-            self.screen.blit(self.player_profile, vp((SCREEN_WIDTH / 2 + vw(82)),
+            self.screen.blit(self.player_profile, vp((get_screen_width() / 2 + vw(82)),
                                                      vh(118) + i * (self.player_bg_height + self.player_bg_margin)))
-            self.screen.blit(player_name, vp(vw(SCREEN_WIDTH / 2 + vw(180)), vh(y + vh(20))))
+            self.screen.blit(player_name, vp(vw(get_screen_width() / 2 + vw(180)), vh(y + vh(20))))
 
         self.gui_manager.draw_ui(self.screen)
-        self.screen.blit(add_player_text, vp(vw(172 + 43), SCREEN_HEIGHT - 200 + 18))
-        self.screen.blit(remove_player_text, vp(vw(350 + 15), SCREEN_HEIGHT - 200 + 18))
+        self.screen.blit(add_player_text, vp(vw(172 + 43), get_screen_height() - 200 + 18))
+        self.screen.blit(remove_player_text, vp(vw(350 + 15), get_screen_height() - 200 + 18))

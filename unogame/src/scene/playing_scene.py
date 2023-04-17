@@ -1,7 +1,7 @@
 import pygame
 from pygame_gui.core import ObjectID
 from pygame_gui.elements import UIButton
-from config.configuration import SCREEN_WIDTH, SCREEN_HEIGHT, vw, vh, vp, KEYBOARD_MAP, get_action
+from config.configuration import get_screen_width, get_screen_height, vw, vh, vp, KEYBOARD_MAP, get_action
 
 from assets import image_keys
 from assets.image_loader import ImageLoader
@@ -64,19 +64,19 @@ class PlayingScene(Scene):
 
     def create_card_buttons(self):
         btn_deck = FocusableUIButton(
-            relative_rect=pygame.Rect((SCREEN_WIDTH/2 - (127+25), vh(241)), vp(127, 188)),
+            relative_rect=pygame.Rect((get_screen_width()/2 - (127+25), vh(241)), vp(127, 188)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_deck")
         )
         btn_uno = FocusableUIButton(
-            relative_rect=pygame.Rect((SCREEN_WIDTH/2 + 150, SCREEN_HEIGHT / 2 - 60), vp(163, 115)),
+            relative_rect=pygame.Rect((get_screen_width()/2 + 150, get_screen_height() / 2 - 60), vp(163, 115)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_uno")
         )
         btn_pause = FocusableUIButton(
-            relative_rect=pygame.Rect((vw(23), SCREEN_HEIGHT - 143), vp(91, 129)),
+            relative_rect=pygame.Rect((vw(23), get_screen_height() - 143), vp(91, 129)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_pause")
@@ -93,13 +93,13 @@ class PlayingScene(Scene):
 
     def create_side_buttons(self):
         btn_view_cards = FocusableUIButton(
-            relative_rect=pygame.Rect((SCREEN_WIDTH - 200, SCREEN_HEIGHT / 2 - 140), vp(199, 107)),
+            relative_rect=pygame.Rect((get_screen_width() - 200, get_screen_height() / 2 - 140), vp(199, 107)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_view_cards")
         )
         btn_turn_off = FocusableUIButton(
-            relative_rect=pygame.Rect((SCREEN_WIDTH - 180, SCREEN_HEIGHT / 2 - 20), vp(179, 110)),
+            relative_rect=pygame.Rect((get_screen_width() - 180, get_screen_height() / 2 - 20), vp(179, 110)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_turn_off")
@@ -121,9 +121,9 @@ class PlayingScene(Scene):
     def draw(self):
         self.screen.fill((141, 168, 104))
         # Add your game drawing code here
-        self.screen.blit(self.card_stack, vp(SCREEN_WIDTH / 2 + 25, 247))
-        self.screen.blit(self.my_cat, vp(SCREEN_WIDTH / 2 - 80, SCREEN_HEIGHT - 238))
-        self.screen.blit(self.small_card, vp(SCREEN_WIDTH / 2 + 40, SCREEN_HEIGHT - 180))
+        self.screen.blit(self.card_stack, vp(get_screen_width() / 2 + 25, 247))
+        self.screen.blit(self.my_cat, vp(get_screen_width() / 2 - 80, get_screen_height() - 238))
+        self.screen.blit(self.small_card, vp(get_screen_width() / 2 + 40, get_screen_height() - 180))
 
         for i in range(len(self.opponent_players)):
             x = 40 + i * 260

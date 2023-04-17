@@ -13,15 +13,16 @@ class ConfigurationState(GameState):
         self.move_scene(scene_name.MAIN_MENU)
 
     def get_screen_size(self):
-        return (configuration.SCREEN_WIDTH, configuration.SCREEN_HEIGHT)
+        return (configuration.get_screen_width(), configuration.get_screen_height())
     def set_screen_size(self, width:int, height:int):
-        configuration.SCREEN_HEIGHT = height
-        configuration.SCREEN_WIDTH = width
+        configuration.set_screen_size(width,height)
+        self.save_to_file()
 
     def get_color_blind(self):
         return configuration.BLIND_MODE
     def set_color_blind(self, blind_mode:string):
         configuration.BLIND_MODE = blind_mode
+        self.save_to_file()
 
     def save_to_file(self):
         configuration.save_config_to_file()

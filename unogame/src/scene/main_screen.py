@@ -43,6 +43,9 @@ class UnoButton(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.image = self.frames[self.cur_frame]
+        self.ai_timer_event = pygame.USEREVENT+4
+        self.ai_time = 5
+        self.timer_able = True
 
     def cut_sheet(self, sheet, columns, rows):
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
@@ -57,6 +60,11 @@ class UnoButton(pygame.sprite.Sprite):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.is_active:
                 self.networking.say_uno()
+        if event.type == pygame.USEREVENT + 4:
+            self.ai_time -= 1
+            if self.ai_time <= 0:
+                self.networking.get_card()
+                self.timer_able = True
 
     def update(self):
         if not self.rect.collidepoint(pygame.mouse.get_pos()):
@@ -73,6 +81,9 @@ class UnoButton(pygame.sprite.Sprite):
         else:
             self.is_active = True
             self.image = self.frames[4]
+            if self.timer_able:
+                self.timer_able = False
+                pygame.time.set_timer(self.ai_timer_event, 1000)
 
 
 class UserInfo(pygame.sprite.Sprite):
@@ -306,6 +317,7 @@ _PLAYER_INDEXES = {
 class MainScreen(Scene):
     def __init__(self, screen, manager: pygame_gui.UIManager, params=None):
         super().__init__(screen, manager, params)
+        self.throwable = True
         self.timer_event = pygame.USEREVENT + 1
         pygame.time.set_timer(self.timer_event, 1000)
         self.turn_time = 30 #TURN_TIME
@@ -382,6 +394,7 @@ class MainScreen(Scene):
         self.background = load_image('images/main.png')
         self.error_font = pygame.freetype.Font('assets/fonts/Roboto-Regular.ttf', 20)
         self.error_font.fgcolor = pygame.color.Color('White')
+        self.last_user = self.networking.user
 
     def draw(self):
         self.surface.blit(self.background, dest=(0, 0))
@@ -409,27 +422,22 @@ class MainScreen(Scene):
         #     self.networking.current_game.next_player()
 
     def process_events(self, event):
-        # if self.networking.get_user_from_game().is_ai:
-        #     print("AI Turn", self.networking.get_user_from_game().name)
-        #     #time.sleep(1)
-        #     self.networking.throw_card(self.networking.get_user_from_game().id, self.networking.get_user_from_game().deck.cards[0])
-        #     #time.sleep(3)
-        #     self.networking.current_game.next_player()
         cur_user = self.networking.get_user_from_game()
+        if cur_user != self.last_user:
+            self.turn_time = 30
         if cur_user.is_ai:
-            print("AI Turn", cur_user.name)
-            pygame.time.delay(2000)
-            print("Delay end!")
+            if self.throwable:
+                pygame.time.set_timer(self.timer_event+1, 3000,1)
+            self.throwable = False
+        if event.type == self.timer_event+1:
             can_throw = False
             for card in range(len(self.networking.get_user_from_game().deck.cards)):
                 if self.networking.throw_card(cur_user.id, card):  # self.networking.get_user_from_game().deck.cards[0])
                     can_throw = True
                     break
-            # time.sleep(3)
             if not can_throw:
                 self.networking.get_card()
-                # self.networking.current_game.next_player()
-
+            self.throwable = True
         if event.type == self.timer_event:
             self.turn_time -= 1
             seconds = self.turn_time
@@ -441,6 +449,7 @@ class MainScreen(Scene):
         self._miscellaneous_group.handle_events(event)
         self._all_cards.handle_events(event)
         self._handle_events(event)
+        self.last_user = cur_user
         pass
 
     def resize_images(self):

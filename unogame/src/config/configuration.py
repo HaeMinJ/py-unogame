@@ -13,6 +13,21 @@ SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 CURRENT_STAGE = 0
 
+
+def get_screen_width():
+    return SCREEN_WIDTH
+
+def get_screen_height():
+    return SCREEN_HEIGHT
+
+def set_screen_size(width, height):
+    global SCREEN_HEIGHT
+    global SCREEN_WIDTH
+    SCREEN_WIDTH = width
+    SCREEN_HEIGHT = height
+    pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
+
+
 KEYBOARD_MAP = {
     pygame.K_UP: action_name.MOVE_UP,
     pygame.K_DOWN: action_name.MOVE_DOWN,
@@ -55,12 +70,13 @@ def save_config_to_file():
     return configurations
 
 
-def load_config_from_file():
+async def load_config_from_file():
     with open("config.json", "r") as f:
         configurations = json.load(f)
         print(configurations)
     convert_to_current_config(configurations)
     convert_keybinding(configurations["keybinding"])
+    pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
     return configurations
 
 def convert_to_current_config(configurations):

@@ -2,7 +2,7 @@ from abc import abstractmethod
 
 
 class Scene:
-    focusable_buttons = []
+
 
     def __init__(self, screen, gui_manager, params=None):
         self.screen = screen
@@ -10,6 +10,7 @@ class Scene:
         self.params = params
         self.state = None
         self.gui_manager.clear_and_reset()
+        self.focusable_buttons = []
         pass
 
     @abstractmethod

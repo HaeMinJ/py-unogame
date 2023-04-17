@@ -4,7 +4,7 @@ from pygame_gui.core import ObjectID
 
 from assets import image_keys
 from assets.image_loader import ImageLoader
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, vw, vh, vp, get_action
+from config import get_screen_width, get_screen_height, vw, vh, vp, get_action
 from states import MenuState
 from utils import action_name
 from widgets import ScrollableUIButton, FocusableUIButton
@@ -31,7 +31,8 @@ class MenuScene(Scene):
         self.btn_ranking = load_image("btn_ranking.png")
         self.btn_setting = load_image("btn_setting.png")
 
-        self.scrollable_area_rect = pygame.Rect(vw(0), vh(124), SCREEN_WIDTH, vh(403))
+
+        self.scrollable_area_rect = pygame.Rect(vw(0), vh(124), get_screen_width(), vh(403))
         self.scrollable_button_width = vw(289)
         self.scrollable_button_height = vh(403)
         self.scrollable_button_margin = vw(52)
@@ -52,7 +53,7 @@ class MenuScene(Scene):
 
     def resize_images(self):
         super().resize_images()
-        self.main_image = pygame.transform.scale(self.main_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.main_image = pygame.transform.scale(self.main_image, (get_screen_width(), get_screen_height()))
         self.logo_image = pygame.transform.smoothscale(self.logo_image, vp(100, 100))
         self.btn_image = pygame.transform.smoothscale(self.btn_image, vp(289, 403))
         self.btn_exit = pygame.transform.smoothscale(self.btn_exit, vp(115, 115))
@@ -78,21 +79,21 @@ class MenuScene(Scene):
 
     def create_below_buttons(self):
         btn_setting = FocusableUIButton(
-            relative_rect=pygame.Rect(((SCREEN_WIDTH - vw(115)) / 2 - vw(86 + 115), SCREEN_HEIGHT - vh(152)),
+            relative_rect=pygame.Rect(((get_screen_width() - vw(115)) / 2 - vw(86 + 115), get_screen_height() - vh(152)),
                                       vp(115, 115)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@main_menu_below_btns")
         )
         btn_ranking = FocusableUIButton(
-            relative_rect=pygame.Rect(((SCREEN_WIDTH - vw(115)) / 2, SCREEN_HEIGHT - vh(152)), vp(115, 115)),
+            relative_rect=pygame.Rect(((get_screen_width() - vw(115)) / 2, get_screen_height() - vh(152)), vp(115, 115)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_2", class_id="@main_menu_below_btns")
 
         )
         btn_exit = FocusableUIButton(
-            relative_rect=pygame.Rect(((SCREEN_WIDTH - vw(115)) / 2 + vw(86 + 115), SCREEN_HEIGHT - vh(152)),
+            relative_rect=pygame.Rect(((get_screen_width() - vw(115)) / 2 + vw(86 + 115), get_screen_height() - vh(152)),
                                       vp(115, 115)),
             text="",
             manager=self.gui_manager,
@@ -163,5 +164,5 @@ class MenuScene(Scene):
 
     def draw(self):
         self.screen.blit(self.main_image, (0, 0))
-        self.screen.blit(self.logo_image, ((SCREEN_WIDTH - vw(100)) / 2, vh(15)))
+        self.screen.blit(self.logo_image, ((get_screen_width() - vw(100)) / 2, vh(15)))
         self.gui_manager.draw_ui(self.screen)

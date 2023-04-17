@@ -11,11 +11,10 @@ class SceneManager:
     _instance = None
 
     def __init__(self, screen, gui_manager, overlay_manager):
-        if SceneManager._instance is not None:
-            raise Exception("SceneManager should be a singleton class.")
-        SceneManager._instance = self
+        # if SceneManager._instance is not None:
+        #     raise Exception("SceneManager should be a singleton class.")
+        # SceneManager._instance = self
 
-        #self.image_loader = image_loader
         self.screen = screen
         self.gui_manager = gui_manager
         self.overlay_manager = overlay_manager
@@ -42,11 +41,17 @@ class SceneManager:
             print("Scene moved(Current Scene) : ", self.current_scene)
 
         if self.current_scene.state.overlay_active_changed:
-            self.current_scene.state.overlay_active_changed = False
+
             self.current_overlay = self.overlay_scenes[self.current_scene.state.overlay_scene_name](self.screen,
                                                                                                     self.overlay_manager)
-            self.current_overlay.set_active()
-            self.overlay_activate = True
+            self.current_overlay.overlay_active_changed = False
+            self.current_scene.state.overlay_active_changed = False
+            self.overlay_activate = self.current_scene.state.overlay_active
+            if self.overlay_activate:
+                self.current_overlay.set_active()
+            else:
+                self.current_overlay.set_inactive()
+
             print("Overlay status changed")
 
     def process_events(self, event):

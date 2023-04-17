@@ -5,7 +5,7 @@ from assets import image_keys
 from scene import Scene
 from states import LandingState
 
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, vw, vh
+from config import get_screen_width, get_screen_height, vw, vh
 from utils.image_utility import load_image
 
 class LandingScene(Scene):

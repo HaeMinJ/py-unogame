@@ -4,7 +4,7 @@ from pygame_gui.core import ObjectID
 
 from assets import image_keys
 from assets.image_loader import ImageLoader
-from config import vp, vw, vh, SCREEN_WIDTH, SCREEN_HEIGHT, get_action
+from config import vp, vw, vh, get_screen_width, get_screen_height, get_action
 from states import ConfigurationState
 from utils import action_name
 from utils.image_utility import load_image
@@ -21,19 +21,19 @@ class ConfigurationOverlayScene(OverlayScene):
         self.close_btn_image = pygame.transform.smoothscale(self.close_btn_image, vp(60, 60))
         self.state = ConfigurationState()
         self.panel = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect(vw(149), (SCREEN_HEIGHT - vh(633)) / 2, vw(984), vh(633)),
+            relative_rect=pygame.Rect(vw(149), (get_screen_height() - vh(633)) / 2, vw(984), vh(633)),
             manager=self.overlay_manager,
             starting_layer_height=2,
             object_id=ObjectID(object_id="overlay_panel", class_id="@overlay_panels")
         )
         self.large_config_panel = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect(vw(186), (SCREEN_HEIGHT - vh(100)) / 2, vw(886), vh(155)),
+            relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(100)) / 2, vw(886), vh(155)),
             manager=self.overlay_manager,
             starting_layer_height=2,
             object_id=ObjectID(object_id="overlay_panel", class_id="@overlay_panels")
         )
         self.small_config_panel = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect(vw(186), (SCREEN_HEIGHT - vh(250)) / 2, vw(886), vh(60)),
+            relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(250)) / 2, vw(886), vh(60)),
             manager=self.overlay_manager,
             starting_layer_height=2,
             object_id=ObjectID(object_id="overlay_panel", class_id="@overlay_panels")
@@ -152,6 +152,7 @@ class ConfigurationOverlayScene(OverlayScene):
             action = get_action(key_event)
             if action == action_name.PAUSE:
                 self.set_inactive()
+
 
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
