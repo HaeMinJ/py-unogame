@@ -9,6 +9,8 @@ from states import MenuState
 from utils import action_name
 from widgets import ScrollableUIButton, FocusableUIButton
 from .scene import Scene
+from utils.image_utility import load_image
+
 
 
 class MenuScene(Scene):
@@ -16,19 +18,19 @@ class MenuScene(Scene):
         self.create_scrollable_buttons()
         self.create_below_buttons()
 
-    def __init__(self, screen, gui_manager, image_loader:ImageLoader):
-        super().__init__(screen, gui_manager, image_loader)
+    def __init__(self, screen, gui_manager):
+        super().__init__(screen, gui_manager)
 
         self.sound_toggle_button = None
         self.state = MenuState()
         self.current_focused_button = -1
 
-        self.main_image = image_loader.get_image(image_keys.IMG_MAIN_BG) #pygame.image.load("assets/main_bg.png")
-        self.logo_image = image_loader.get_image(image_keys.IMG_LOGO) #pygame.image.load("assets/logo.png")
-        self.btn_image = image_loader.get_image(image_keys.IMG_BTN_MENU) #pygame.image.load("assets/menu_btn.png")
-        self.btn_exit = image_loader.get_image(image_keys.IMG_BTN_EXIT) #pygame.image.load("assets/btn_exit.png")
-        self.btn_ranking = image_loader.get_image(image_keys.IMG_BTN_RANKING) #pygame.image.load("assets/btn_ranking.png")
-        self.btn_setting = image_loader.get_image(image_keys.IMG_BTN_SETTING) #pygame.image.load("assets/btn_setting.png")
+        self.main_image = load_image("main_bg.png")
+        self.logo_image = load_image("logo.png")
+        self.btn_image = load_image("menu_btn.png")
+        self.btn_exit = load_image("btn_exit.png")
+        self.btn_ranking = load_image("btn_ranking.png")
+        self.btn_setting = load_image("btn_setting.png")
 
         self.scrollable_area_rect = pygame.Rect(vw(0), vh(124), SCREEN_WIDTH, vh(403))
         self.scrollable_button_width = vw(289)

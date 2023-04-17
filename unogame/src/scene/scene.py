@@ -9,7 +9,6 @@ class Scene:
         self.gui_manager = gui_manager
         self.state = None
         self.gui_manager.clear_and_reset()
-        #self.image_loader = image_loader
         pass
 
     @abstractmethod

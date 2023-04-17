@@ -33,8 +33,8 @@ class SceneManager:
             overlay_name.CONFIGURATION: ConfigurationOverlayScene
         }
         networking = Networking()
-        main = MainScreen(screen,gui_manager,networking)
-        self.current_scene = self.scenes[scene_name.STORY_MAP_SCENE](screen, gui_manager)
+        main = MainScreen(screen, gui_manager, networking)
+        self.current_scene = self.scenes[scene_name.MAIN_MENU](screen, gui_manager)
         self.current_overlay = self.overlay_scenes[overlay_name.CONFIGURATION](screen, overlay_manager)
 
 
