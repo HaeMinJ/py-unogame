@@ -6,12 +6,13 @@ import pygame_gui
 from pygame.event import Event
 from pygame.sprite import AbstractGroup
 from pygame.surface import Surface
+from pygame_gui.elements import UILabel
 
 from classes.cards.wild_cards import WildChangeColorCard, WildGetFourCard
 from classes.enums.colors import Colors
 from classes.enums.directions import Directions
 from classes.game.networking import Networking
-from config import vw, vp
+from config import vw, vp, vh
 from scene import Scene, LandingScene
 from states import PlayingState
 from utils.card_utility import card_image, random_cards
@@ -305,6 +306,9 @@ _PLAYER_INDEXES = {
 class MainScreen(Scene):
     def __init__(self, screen, manager: pygame_gui.UIManager, params=None):
         super().__init__(screen, manager, params)
+        self.timer_event = pygame.USEREVENT + 1
+        pygame.time.set_timer(self.timer_event, 1000)
+        self.turn_time = 30 #TURN_TIME
         self.state = PlayingState()
         self.networking = Networking(params)
         self.player_counts = len(params)
@@ -321,9 +325,12 @@ class MainScreen(Scene):
         self._uno_button = UnoButton(1060, 560, self.networking, self._miscellaneous_group)
         self._player_indexes = _PLAYER_INDEXES[0]
             # self.networking.user_id(self.networking.get_user_from_game())]
+        self.turn_timer = UILabel(pygame.Rect(vp(280, 200), vp(40, 40)), "00", self.gui_manager)
+        self.turn_timer.set_text_scale(40)
+        self.color_surface = pygame.Rect(vp(280,280),vp(40,40))
 
         self._cards = {
-            'self': Cards(0, (1280 / 2) - 300, 600, self.networking,
+            'self': Cards(0, vw((1280 / 2) - 300), vh(600), self.networking,
                           self._all_cards, is_blank=False)
         }
         self._users_names = {
@@ -332,44 +339,44 @@ class MainScreen(Scene):
         }
         if self.player_counts == 2:
             # noinspection PyTypedDict
-            self._cards['opposite']=Cards(1, (1280 / 2) - 195, -60,
+            self._cards['opposite']=Cards(1, vw((1280 / 2) - 195), vh(-60),
                                           self.networking, self._all_cards, rotation=180, max_width=320, is_blank=True)
-            self._users_names['opposite']=UserInfo(907,41, self.networking, 1,
+            self._users_names['opposite']=UserInfo(vw(907),vh(41), self.networking, 1,
                              self._miscellaneous_group)
         if self.player_counts == 3:
             # noinspection PyTypedDict
-            self._cards['left']=Cards(1, -60, 160, self.networking, self._all_cards,
+            self._cards['left']=Cards(1, vw(-60),vh(160), self.networking, self._all_cards,
                           rotation=90, max_width=320, is_blank=True)
             # noinspection PyTypedDict
-            self._cards['opposite']=Cards(2, (1280 / 2) - 195, -60,
-                                          self.networking, self._all_cards, rotation=180, max_width=320, is_blank=True)
-            self._users_names['left']=UserInfo(274, 170, self.networking,1,
+            self._cards['opposite']=Cards(2, vw((1280 / 2) - 195),vh(-60),
+                                          self.networking, self._all_cards, rotation=180, max_width=vw(320), is_blank=True)
+            self._users_names['left']=UserInfo(vw(274),vh(170), self.networking,1,
                              self._miscellaneous_group),
-            self._users_names['opposite']=UserInfo(907,41, self.networking, 2,
+            self._users_names['opposite']=UserInfo(vw(907),vh(1), self.networking, 2,
                              self._miscellaneous_group)
         if self.player_counts == 4:
             self._cards = {
-                'self': Cards(self._player_indexes['self'], (1280 / 2) - 300, 600, self.networking,
+                'self': Cards(self._player_indexes['self'], vw((1280 / 2) - 300),vh(600), self.networking,
                               self._all_cards, is_blank=False),
-                'right': Cards(self._player_indexes['right'], 1160, 160, self.networking,
-                               self._all_cards, rotation=270, max_width=320, is_blank=True),
-                'left': Cards(self._player_indexes['left'], -60, 160, self.networking, self._all_cards,
+                'right': Cards(self._player_indexes['right'], vw(1160),vh(160), self.networking,
+                               self._all_cards, rotation=270, max_width=vw(320), is_blank=True),
+                'left': Cards(self._player_indexes['left'], vw(-60),vh(160), self.networking, self._all_cards,
                               rotation=90, max_width=320, is_blank=True),
-                'opposite': Cards(self._player_indexes['opposite'], (1280 / 2) - 195, -60,
-                                  self.networking, self._all_cards, rotation=180, max_width=320, is_blank=True)
+                'opposite': Cards(self._player_indexes['opposite'], vw((1280 / 2) - 195),vh(-60),
+                                  self.networking, self._all_cards, rotation=180, max_width=vw(320), is_blank=True)
             }
             self._users_names = {
-                'self': UserInfo(169, 533, self.networking, self._player_indexes['self'],
+                'self': UserInfo(vw(169),vh(533), self.networking, self._player_indexes['self'],
                                  self._miscellaneous_group),
-                'right': UserInfo(927, 294, self.networking, self._player_indexes['right'],
+                'right': UserInfo(vw(927),vh(294), self.networking, self._player_indexes['right'],
                                   self._miscellaneous_group),
-                'left': UserInfo(274, 170, self.networking, self._player_indexes['left'],
+                'left': UserInfo(vw(274),vh(170), self.networking, self._player_indexes['left'],
                                  self._miscellaneous_group),
-                'opposite': UserInfo(907, 41, self.networking, self._player_indexes['opposite'],
+                'opposite': UserInfo(vw(907),vh(41), self.networking, self._player_indexes['opposite'],
                                      self._miscellaneous_group),
             }
 
-        self._game_cards = GameCards(self.networking, 640 - 60, 360 - 90,
+        self._game_cards = GameCards(self.networking, vw(640 - 60),vh(360 - 90),
                                      self._all_cards)
 
         self.background = load_image('images/main.png')
@@ -378,6 +385,7 @@ class MainScreen(Scene):
 
     def draw(self):
         self.surface.blit(self.background, dest=(0, 0))
+        pygame.draw.rect(self.screen,self.networking.current_game.deck.cards[0].color.name,self.color_surface)
         if (isinstance(self.networking.current_game.deck.cards[0], WildChangeColorCard) or
             isinstance(self.networking.current_game.deck.cards[0], WildGetFourCard)) and \
                 self.networking.is_our_move and not self.networking.get_user_from_game().is_ai:
@@ -414,13 +422,22 @@ class MainScreen(Scene):
             print("Delay end!")
             can_throw = False
             for card in range(len(self.networking.get_user_from_game().deck.cards)):
-                if self.networking.throw_card(cur_user.id, card): #self.networking.get_user_from_game().deck.cards[0])
+                if self.networking.throw_card(cur_user.id, card):  # self.networking.get_user_from_game().deck.cards[0])
                     can_throw = True
                     break
-            #time.sleep(3)
+            # time.sleep(3)
             if not can_throw:
                 self.networking.get_card()
-                #self.networking.current_game.next_player()
+                # self.networking.current_game.next_player()
+
+        if event.type == self.timer_event:
+            self.turn_time -= 1
+            seconds = self.turn_time
+            self.turn_timer.set_text(f"{seconds:02d}")
+            if self.turn_time <= 0:
+                self.turn_time = 30
+                self.networking.get_card()
+
         self._miscellaneous_group.handle_events(event)
         self._all_cards.handle_events(event)
         self._handle_events(event)
