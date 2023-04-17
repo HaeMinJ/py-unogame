@@ -12,8 +12,8 @@ from widgets.overlay import OverlayScene
 
 class ConfigurationOverlayScene(OverlayScene):
 
-    def __init__(self, screen, overlay_manager): #, image_loader):
-        super().__init__(screen, overlay_manager) #, image_loader)
+    def __init__(self, screen, overlay_manager):
+        super().__init__(screen, overlay_manager)
         #self.close_btn_image = ImageLoader.get_image(image_loader, image_keys.IMG_BTN_CLOSE_OVERLAY)
 #        self.close_btn_image = pygame.transform.smoothscale(self.close_btn_image, vp(60, 60))
         self.state = ConfigurationState()

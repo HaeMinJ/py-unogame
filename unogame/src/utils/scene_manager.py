@@ -32,7 +32,7 @@ class SceneManager:
         self.overlay_scenes = {
             overlay_name.CONFIGURATION: ConfigurationOverlayScene
         }
-        self.current_scene = self.scenes[scene_name.LANDING](screen, gui_manager)
+        self.current_scene = self.scenes[scene_name.STORY_MAP_SCENE](screen, gui_manager)
         self.current_overlay = self.overlay_scenes[overlay_name.CONFIGURATION](screen, overlay_manager)
 
     def update(self):

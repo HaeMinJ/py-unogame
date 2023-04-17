@@ -12,7 +12,6 @@ from .scene import Scene
 from utils.image_utility import load_image
 
 
-
 class MenuScene(Scene):
     def initialize_elements(self):
         self.create_scrollable_buttons()
