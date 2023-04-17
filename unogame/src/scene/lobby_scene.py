@@ -2,11 +2,12 @@ import pygame
 import pygame_gui
 from pygame_gui.core import ObjectID
 
-from config.configuration import SCREEN_WIDTH, SCREEN_HEIGHT, vw, vh, vp, KEYBOARD_MAP
+from config.configuration import SCREEN_WIDTH, SCREEN_HEIGHT, vw, vh, vp, KEYBOARD_MAP, get_action
 
 from scene import Scene
 from states.lobby_state import LobbyState
-from utils import action_name, overlay_name
+from utils import action_name, overlay_name, scene_name
+from utils.image_utility import load_image
 from widgets import FocusableUIButton
 from classes.auth.user import User
 
@@ -17,16 +18,17 @@ class LobbyScene(Scene):
         self.create_below_buttons()
         self.create_set_player_buttons()
 
-    def __init__(self, screen, gui_manager):
-        super().__init__(screen, gui_manager)
+    def __init__(self, screen, gui_manager, params=None):
+        super().__init__(screen, gui_manager, params)
         self.state = LobbyState()
+        self.focusable_buttons = []
 
-        self.lobby_image = pygame.image.load("assets/lobby_img/lobby_bg.png")
-        self.btn_left = pygame.image.load("assets/lobby_img/btn_left.png")
-        self.btn_right = pygame.image.load("assets/lobby_img/btn_right.png")
-        self.player_bg = pygame.image.load("assets/lobby_img/player_bg.png")
-        self.other_player_bg = pygame.image.load("assets/lobby_img/other_player_bg.png")
-        self.btn_set_player = pygame.image.load("assets/lobby_img/btn_set_player.png")
+        self.lobby_image = load_image("lobby_img/lobby_bg.png")
+        self.btn_left = load_image("lobby_img/btn_left.png")
+        self.btn_right = load_image("lobby_img/btn_right.png")
+        self.player_bg = load_image("lobby_img/player_bg.png")
+        self.other_player_bg = load_image("lobby_img/other_player_bg.png")
+        self.btn_set_player = load_image("lobby_img/btn_set_player.png")
 
         self.player_bg_width = vw(512)
         self.player_bg_height = vh(90)
@@ -92,7 +94,7 @@ class LobbyScene(Scene):
             key_event = event.key
             action = get_action(key_event)
             if action == action_name.RETURN:
-                self.state.start_single_play()
+                self.state.start_single_play(self.players)
             if action == action_name.PAUSE:
                 self.state.active_overlay(overlay_name.CONFIGURATION)
         if event.type == pygame.USEREVENT:
@@ -103,6 +105,8 @@ class LobbyScene(Scene):
                 if event.ui_element == self.set_player_buttons[1]:
                     if len(self.players) > 1:
                         self.players.pop()
+                if event.ui_element == self.focusable_buttons[3]:
+                    self.state.move_scene(scene_name.PLAYING_SCENE, self.players)
 
     def draw(self):
         font = pygame.font.SysFont('arial', 40)

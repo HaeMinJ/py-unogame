@@ -7,25 +7,26 @@ from scene import Scene
 from states.story_map_state import StoryMapState
 from utils import action_name, overlay_name
 from widgets import FocusableUIButton
+from utils.image_utility import load_image
 from classes.auth.user import User
 class StoryMapScene(Scene):
     def initialize_elements(self):
         self.create_stage_buttons()
 
-    def __init__(self, screen, gui_manager):
+    def __init__(self, screen, gui_manager, params=None):
         super().__init__(screen, gui_manager)
         self.state = StoryMapState()
 
-        self.story_map_bg = pygame.image.load("assets/story_map_img/story_map_bg.png")
-        self.stage_1 = pygame.image.load("assets/story_map_img/stage_1.png")
-        self.stage_2 = pygame.image.load("assets/story_map_img/stage_2.png")
-        self.stage_3 = pygame.image.load("assets/story_map_img/stage_3.png")
-        self.stage_4 = pygame.image.load("assets/story_map_img/stage_4.png")
-        self.stage_1_bg = pygame.image.load("assets/story_map_img/stage_1_bg.png")
-        self.stage_2_bg = pygame.image.load("assets/story_map_img/stage_2_bg.png")
-        self.stage_3_bg = pygame.image.load("assets/story_map_img/stage_3_bg.png")
-        self.stage_4_bg = pygame.image.load("assets/story_map_img/stage_4_bg.png")
-        self.lock = pygame.image.load("assets/story_map_img/lock.png")
+        self.story_map_bg = load_image("story_map_img/story_map_bg.png")
+        self.stage_1 = load_image("story_map_img/stage_1.png")
+        self.stage_2 = load_image("story_map_img/stage_2.png")
+        self.stage_3 = load_image("story_map_img/stage_3.png")
+        self.stage_4 = load_image("story_map_img/stage_4.png")
+        self.stage_1_bg = load_image("story_map_img/stage_1_bg.png")
+        self.stage_2_bg = load_image("story_map_img/stage_2_bg.png")
+        self.stage_3_bg = load_image("story_map_img/stage_3_bg.png")
+        self.stage_4_bg = load_image("story_map_img/stage_4_bg.png")
+        self.lock = load_image("story_map_img/lock.png")
 
         self.current_stage = 0
         self.stage_buttons =[]

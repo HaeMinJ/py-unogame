@@ -4,7 +4,7 @@ from classes.game.networking import Networking
 from scene.lobby_scene import LobbyScene
 from scene.main_screen import MainScreen
 from utils import scene_name, overlay_name
-from scene import MenuScene,LandingScene,PlayingScene,ConfigurationOverlayScene, StoryMapScene
+from scene import MenuScene, LandingScene, PlayingScene, ConfigurationOverlayScene, StoryMapScene
 
 
 class SceneManager:
@@ -15,7 +15,7 @@ class SceneManager:
             raise Exception("SceneManager should be a singleton class.")
         SceneManager._instance = self
 
-        #self.image_loader = image_loader
+        # self.image_loader = image_loader
         self.screen = screen
         self.gui_manager = gui_manager
         self.overlay_manager = overlay_manager
@@ -32,27 +32,23 @@ class SceneManager:
         self.overlay_scenes = {
             overlay_name.CONFIGURATION: ConfigurationOverlayScene
         }
-        networking = Networking()
-        main = MainScreen(screen,gui_manager,networking)
-        self.current_scene = self.scenes[scene_name.STORY_MAP_SCENE](screen, gui_manager)
+        self.current_scene = self.scenes[scene_name.LANDING](screen, gui_manager)
         self.current_overlay = self.overlay_scenes[overlay_name.CONFIGURATION](screen, overlay_manager)
 
-
     def update(self):
-        pass
-        # if self.current_scene.state.scene_changed:
-        #     self.current_scene.state.scene_changed = False
-        #     self.current_scene = self.scenes[self.current_scene.state.next_scene_name](self.screen, self.gui_manager)
-        #                                                                                #, self.image_loader)
-        #     print("Scene moved(Current Scene) : ", self.current_scene)
-        #
-        # if self.current_scene.state.overlay_active_changed:
-        #     self.current_scene.state.overlay_active_changed = False
-        #     self.current_overlay = self.overlay_scenes[self.current_scene.state.overlay_scene_name](self.screen, self.overlay_manager)
-        #                                                                                             #,self.image_loader)
-        #     self.current_overlay.set_active()
-        #     self.overlay_activate = True
-        #     print("Overlay status changed")
+        if self.current_scene.state.scene_changed:
+            self.current_scene.state.scene_changed = False
+            self.current_scene = self.scenes[self.current_scene.state.next_scene_name](self.screen, self.gui_manager, self.current_scene.state.next_params)
+            print("Scene moved(Current Scene) : ", self.current_scene)
+
+        if self.current_scene.state.overlay_active_changed:
+            self.current_scene.state.overlay_active_changed = False
+            self.current_overlay = self.overlay_scenes[self.current_scene.state.overlay_scene_name](self.screen,
+                                                                                                    self.overlay_manager)
+
+            self.current_overlay.set_active()
+            self.overlay_activate = True
+            print("Overlay status changed")
 
     def process_events(self, event):
         if not self.current_overlay.active:

@@ -6,12 +6,13 @@ from scene import Scene
 from states import LandingState
 
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, vw, vh
+from utils.image_utility import load_image
 
 class LandingScene(Scene):
-    def __init__(self, screen, gui_manager, image_loader):
-        super().__init__(screen, gui_manager, image_loader)
+    def __init__(self, screen, gui_manager, params=None):
+        super().__init__(screen, gui_manager, params)
         self.state = LandingState()
-        self.logo_image = image_loader.get_image(image_keys.IMG_LOGO)
+        self.logo_image = load_image("logo.png")
         self.single_play_button = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect((vw(40), vh(30)), (vw(8), vh(25))),
             text="Landing",

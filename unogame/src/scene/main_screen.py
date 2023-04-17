@@ -17,7 +17,6 @@ from utils.image_utility import load_image
 from utils.text_utility import truncate
 import time
 
-
 class EventGroup(pygame.sprite.Group):
     def __init__(self, *sprites):
         super().__init__(*sprites)
@@ -50,7 +49,7 @@ class UnoButton(pygame.sprite.Sprite):
                 self.frames.append(sheet.subsurface(pygame.Rect(
                     frame_location, self.rect.size)))
 
-    def handle_events(self, event: Event):
+    def handle_events(self, event:  Event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.is_active:
                 self.networking.say_uno()
@@ -117,9 +116,9 @@ class CardGiver(pygame.sprite.Sprite):
 
     def handle_events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.is_active:
-                if self.networking.is_our_move:
-                    self.networking.get_card()
+                if self.is_active:
+                    if self.networking.is_our_move:
+                        self.networking.get_card()
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if self.rect.collidepoint(pygame.mouse.get_pos()):
@@ -159,12 +158,8 @@ class ColorChooser(pygame.sprite.Sprite):
                 card = random_cards(color=Colors.YELLOW)[0]
             if self._active_color == (1, 1):
                 card = random_cards(color=Colors.BLUE)[0]
-            self.networking.throw_card(self.networking.user.id, card, ignore=True)
-            # self.networking.current_game.next_player()
-            # time.sleep(1)
-            return
-
-
+            self.networking.throw_card(card, ignore=True)
+            self.networking.current_game.next_player()
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         self.image.fill((0, 0, 0, 0))
@@ -299,18 +294,18 @@ _PLAYER_INDEXES = {
 
 
 class MainScreen(Scene):
-    def __init__(self, surface: Surface, manager: pygame_gui.UIManager, networking: Networking):
-        super().__init__(surface, manager)
-        # self.next_screen = LandingScene()
-        self.networking = networking
+    def __init__(self, screen, manager: pygame_gui.UIManager, params=None):
+        super().__init__(screen, manager, params)
+        self.networking = Networking()
+        print(params)
         self.gui_manager = manager
-        self.surface = surface
+        self.surface = screen
         self._miscellaneous_group = EventGroup()
         DirectionSprite(self.networking, self._miscellaneous_group)
 
         self._all_cards = EventGroup()
         self._game_deck = pygame.sprite.Group()
-        self._color_chooser = ColorChooser(540, 260, networking, self._miscellaneous_group)
+        self._color_chooser = ColorChooser(540, 260, self.networking, self._miscellaneous_group)
         self._card_giver = CardGiver(175, 20, self.networking, self._miscellaneous_group)
         self._uno_button = UnoButton(1060, 560, self.networking, self._miscellaneous_group)
         self._player_indexes = _PLAYER_INDEXES[
@@ -395,3 +390,4 @@ class MainScreen(Scene):
     def _handle_events(self, event: Event):
         if event.type == Cards.CARD_END:
             self.is_running = False
+
