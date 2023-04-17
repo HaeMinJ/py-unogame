@@ -38,4 +38,5 @@ class ReverseCard(SpecialCard):
 class SkipCard(SpecialCard):
     @staticmethod
     def move(game):
+        print("Skip Card!")
         game.next_player()
