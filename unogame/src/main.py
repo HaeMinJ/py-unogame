@@ -32,6 +32,8 @@ clock = pygame.time.Clock()
 #image_loader = ImageLoader()
 # Create a SceneManager instance
 scene_manager = SceneManager(screen, gui_manager, overlay_manager)
+
+
 while True:
     time_delta = clock.tick(60) / 1000.0
 

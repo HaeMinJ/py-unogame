@@ -30,7 +30,8 @@ class StoryMapScene(Scene):
         self.lock = load_image("story_map_img/lock.png")
         self.btn_start_game = load_image("story_map_img/btn_start_game.png")
 
-        self.current_stage = 1
+        from config import configuration
+        self.current_stage = configuration.CURRENT_STAGE
         self.stage_buttons =[]
 
         self.resize_images()
@@ -113,28 +114,28 @@ class StoryMapScene(Scene):
                     self.screen.blit(stage_1, vp(268 + 64, 51 + 120))
                     pygame.display.flip()
                     pygame.time.delay(2000)
-                    self.state.start_single_play()
+                    self.state.start_single_play(1)
                 if event.ui_element == self.stage_buttons[1]:
                     if self.current_stage >= 1:
                         self.screen.blit(self.stage_2, vp(331, 224))
                         self.screen.blit(stage_2, vp(331 + 64, 224 + 120))
                         pygame.display.flip()
                         pygame.time.delay(2000)
-                        self.state.start_single_play()
+                        self.state.start_single_play(2)
                 if event.ui_element == self.stage_buttons[2]:
                     if self.current_stage >= 2:
                         self.screen.blit(self.stage_3, vp(542, 301))
                         self.screen.blit(stage_3, vp(542 + 64, 301 + 120))
                         pygame.display.flip()
                         pygame.time.delay(2000)
-                        self.state.start_single_play()
+                        self.state.start_single_play(3)
                 if event.ui_element == self.stage_buttons[3]:
                     if self.current_stage >= 3:
                         self.screen.blit(self.stage_4, vp(853, 80))
                         self.screen.blit(stage_4, vp(268 + 64, 51 + 120))
                         pygame.display.flip()
                         pygame.time.delay(2000)
-                        self.state.start_single_play()
+                        self.state.start_single_play(4)
 
     def draw(self):
         self.screen.blit(self.story_map_bg, vp(0, 0))

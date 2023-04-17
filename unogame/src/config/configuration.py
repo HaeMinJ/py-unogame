@@ -12,7 +12,22 @@ BLIND_MODE = blind_mode_name.DEFAULT
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 CURRENT_STAGE = 0
+SOUND_VOLUME = 30
+SOUND_ON = True
 
+def set_sound_volume(v:int):
+    global SOUND_VOLUME
+    SOUND_VOLUME = v
+def get_sound_volume():
+    return SOUND_VOLUME
+def set_sound_on():
+    global SOUND_ON
+    SOUND_ON = True
+def set_sound_off():
+    global SOUND_ON
+    SOUND_ON = False
+def is_sound_on():
+    return SOUND_ON
 
 def get_screen_width():
     return SCREEN_WIDTH
@@ -63,7 +78,9 @@ def save_config_to_file():
         "SCREEN_HEIGHT" : SCREEN_HEIGHT,
         "SCREEN_WIDTH" : SCREEN_WIDTH,
         "keybinding" : keybindings,
-        "CURRENT_STAGE": CURRENT_STAGE
+        "CURRENT_STAGE": CURRENT_STAGE,
+        "SOUND_VOLUME":SOUND_VOLUME,
+        "SOUND_ON":SOUND_ON
     }
     with open("config.json", "w") as f:
         json.dump(configurations, f)
@@ -84,10 +101,18 @@ def convert_to_current_config(configurations):
     global SCREEN_WIDTH
     global SCREEN_HEIGHT
     global CURRENT_STAGE
-    BLIND_MODE=configurations["BLIND_MODE"]
-    SCREEN_WIDTH=configurations["SCREEN_WIDTH"]
-    SCREEN_HEIGHT=configurations["SCREEN_HEIGHT"]
-    CURRENT_STAGE=configurations["CURRENT_STAGE"]
+    global SOUND_VOLUME
+    global SOUND_ON
+    try:
+        BLIND_MODE=configurations["BLIND_MODE"]
+        SCREEN_WIDTH=configurations["SCREEN_WIDTH"]
+        SCREEN_HEIGHT=configurations["SCREEN_HEIGHT"]
+        CURRENT_STAGE=configurations["CURRENT_STAGE"]
+        SOUND_ON=configurations["SOUND_ON"]
+        SOUND_VOLUME=configurations["SOUND_VOLUME"]
+    except(KeyError):
+        print("No Initial config valid.")
+
 
 def convert_keybinding(keybindings):
     global KEYBOARD_MAP

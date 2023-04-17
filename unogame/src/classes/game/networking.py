@@ -30,6 +30,7 @@ class Networking:
         self.authorized_user = None
         #self._connect(address, port)
         self.user = self.get_user_from_game()
+        self.current_moving_card = None
 
     def _connect(self, address, port):
         pass
@@ -76,6 +77,7 @@ class Networking:
             card_object = card
         result = self.current_game.deck.append_card(card_object, ignore=ignore)
         if result:
+            self.current_moving_card = card_object
             if len(current_user.deck.cards) == 2 and not current_user.deck.uno_said:
                 current_user.deck.random_cards(2)
             card_object.move(self.current_game)

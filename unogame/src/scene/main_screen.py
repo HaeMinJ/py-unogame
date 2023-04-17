@@ -132,9 +132,8 @@ class CardGiver(pygame.sprite.Sprite):
     def handle_events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.is_active:
-                if self.networking.is_our_move:
+                if self.networking.is_our_move and self.networking.get_user_from_game() == 0:
                     self.networking.get_card()
-                    self.networking.current_game.next_player()
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         if self.rect.collidepoint(pygame.mouse.get_pos()):
@@ -197,6 +196,14 @@ class ColorChooser(pygame.sprite.Sprite):
 class Cards(pygame.sprite.Sprite):
     CARD_END = pygame.event.custom_type()
 
+    def moveToCenter(self):
+        from config import configuration
+        dest_x = configuration.get_screen_width()/2
+        dest_y = configuration.get_screen_height()/2
+        print(int(vw(1)*(dest_x-self.rect.x)))
+        self.rect.x += int(vw(10)*(dest_x-self.rect.x))
+        self.rect.y += int(vh(10)*(dest_y-self.rect.y))
+
     def __init__(self, user_id: int, x, y, networking: Networking, *groups: AbstractGroup,
                  max_width: int = vw(600), is_blank: bool = True, rotation: int = 0):
         super().__init__(*groups)
@@ -213,14 +220,25 @@ class Cards(pygame.sprite.Sprite):
         self.card_set = load_image('images/cards.png')
         self._active_card_index = -1
         self.rotation = rotation
+        self.wrong_sound = pygame.mixer.Sound("assets/sound/wrong.mp3")
+        from config import configuration
+        self.wrong_sound.set_volume(configuration.get_sound_volume())
+        self.throw_sound = pygame.mixer.Sound("assets/sound/throw_card.mp3")
+        self.throw_sound.set_volume(configuration.get_sound_volume())
 
     def handle_events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self._active_card_index >= 0 and \
                     self.networking.is_our_move:
                 self.networking.throw_card(0, self._active_card_index)
+                pygame.time.set_timer(pygame.USEREVENT + 100, 100, 10)
+                from config import configuration
+                if configuration.is_sound_on():
+                    self.throw_sound.play(1)
             else:
-                pass  # TODO: play some sound when you cant throw a card
+                from config import configuration
+                if configuration.is_sound_on():
+                    self.wrong_sound.play(1)
                 # (because it is not your way)
 
     def update(self, *args: Any, **kwargs: Any):
@@ -326,6 +344,7 @@ class MainScreen(Scene):
         self.player_counts = len(params)
         print(params)
         self.gui_manager = manager
+        self.card_set = load_image('images/cards.png')
         self.surface = screen
         self._miscellaneous_group = EventGroup()
         DirectionSprite(self.networking, self._miscellaneous_group)
@@ -337,9 +356,9 @@ class MainScreen(Scene):
         self._uno_button = UnoButton(1060, 560, self.networking, self._miscellaneous_group)
         self._player_indexes = _PLAYER_INDEXES[0]
             # self.networking.user_id(self.networking.get_user_from_game())]
-        self.turn_timer = UILabel(pygame.Rect(vp(280, 200), vp(40, 40)), "00", self.gui_manager)
+        self.turn_timer = UILabel(pygame.Rect(vp(420, 200), vp(40, 40)), "00", self.gui_manager)
         self.turn_timer.set_text_scale(40)
-        self.color_surface = pygame.Rect(vp(280,280),vp(40,40))
+        self.color_surface = pygame.Rect(vp(420,280),vp(40,40))
 
         self._cards = {
             'self': Cards(0, vw((1280 / 2) - 300), vh(600), self.networking,
@@ -395,6 +414,12 @@ class MainScreen(Scene):
         self.error_font = pygame.freetype.Font('assets/fonts/Roboto-Regular.ttf', 20)
         self.error_font.fgcolor = pygame.color.Color('White')
         self.last_user = self.networking.user
+        self.first_sound = pygame.mixer.Sound("assets/sound/shuffle_card.mp3")
+
+        from config import configuration
+        self.first_sound.set_volume(configuration.get_sound_volume())
+        if configuration.is_sound_on():
+            self.first_sound.play(1)
 
     def draw(self):
         self.surface.blit(self.background, dest=(0, 0))
@@ -415,6 +440,8 @@ class MainScreen(Scene):
         self._miscellaneous_group.draw(self.surface)
         self._miscellaneous_group.update()
         self.gui_manager.draw_ui(self.screen)
+
+        #self.screen.blit(card_image(self.card_set, self.networking.current_moving_card), (vp(100, 100)))
 
         # while self.networking.get_user_from_game().is_ai:
         #     print("AI Turn", self.networking.get_user_from_game().name)
@@ -450,6 +477,8 @@ class MainScreen(Scene):
         self._all_cards.handle_events(event)
         self._handle_events(event)
         self.last_user = cur_user
+        # if event.type == pygame.USEREVENT+100:
+        #     pass
         pass
 
     def resize_images(self):

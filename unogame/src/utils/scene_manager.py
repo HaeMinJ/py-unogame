@@ -19,6 +19,14 @@ class SceneManager:
         self.gui_manager = gui_manager
         self.overlay_manager = overlay_manager
         self.overlay_activate = False
+        from config import configuration
+        self.current_sound_volume = configuration.get_sound_volume()
+        self.current_sound_on = configuration.is_sound_on()
+
+        self.sounds = {
+            "LOBBY":  pygame.mixer.Sound("assets/sound/lobby.mp3"),
+            "PLAYING": pygame.mixer.Sound("assets/sound/game.mp3")
+        }
 
         self.scenes = {
             scene_name.LANDING: LandingScene,
@@ -31,10 +39,23 @@ class SceneManager:
         self.overlay_scenes = {
             overlay_name.CONFIGURATION: ConfigurationOverlayScene
         }
+        self.current_sound = self.sounds["LOBBY"]
+        self.current_sound.play()
         self.current_scene = self.scenes[scene_name.MAIN_MENU](screen, gui_manager)
         self.current_overlay = self.overlay_scenes[overlay_name.CONFIGURATION](screen, overlay_manager)
 
     def update(self):
+        from config import configuration
+        if self.current_sound_on != configuration.is_sound_on():
+            self.current_sound_on = configuration.is_sound_on()
+            if self.current_sound_on:
+                self.current_sound.play()
+            else:
+                self.current_sound.stop()
+        if self.current_sound_volume != configuration.get_sound_volume():
+            self.current_sound.set_volume(configuration.get_sound_volume())
+            self.current_sound_volume = configuration.get_sound_volume()
+
         if self.current_scene.state.scene_changed:
             self.current_scene.state.scene_changed = False
             self.current_scene = self.scenes[self.current_scene.state.next_scene_name](self.screen, self.gui_manager, self.current_scene.state.next_params)
