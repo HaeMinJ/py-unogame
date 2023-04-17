@@ -4,7 +4,7 @@ from classes.game.networking import Networking
 from scene.lobby_scene import LobbyScene
 from scene.main_screen import MainScreen
 from utils import scene_name, overlay_name
-from scene import MenuScene,LandingScene,PlayingScene,ConfigurationOverlayScene
+from scene import MenuScene,LandingScene,PlayingScene,ConfigurationOverlayScene, StoryMapScene
 
 
 class SceneManager:
@@ -26,6 +26,7 @@ class SceneManager:
             scene_name.MAIN_MENU: MenuScene,
             scene_name.PLAYING_GAME: PlayingScene,
             scene_name.LOBBY_SCENE: LobbyScene,
+            scene_name.STORY_MAP_SCENE: StoryMapScene,
             scene_name.PLAYING_SCENE: MainScreen,
         }
         self.overlay_scenes = {
@@ -33,7 +34,7 @@ class SceneManager:
         }
         networking = Networking()
         main = MainScreen(screen,gui_manager,networking)
-        self.current_scene = self.scenes[scene_name.LOBBY_SCENE](screen, gui_manager)
+        self.current_scene = self.scenes[scene_name.STORY_MAP_SCENE](screen, gui_manager)
         self.current_overlay = self.overlay_scenes[overlay_name.CONFIGURATION](screen, overlay_manager)
 
 
