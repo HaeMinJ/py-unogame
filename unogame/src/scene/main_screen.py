@@ -15,6 +15,7 @@ from classes.game.networking import Networking
 from config import vw, vp, vh
 from scene import Scene, LandingScene
 from states import PlayingState
+from utils import scene_name
 from utils.card_utility import card_image, random_cards
 from utils.image_utility import load_image
 from utils.text_utility import truncate
@@ -132,7 +133,7 @@ class CardGiver(pygame.sprite.Sprite):
     def handle_events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.is_active:
-                if self.networking.is_our_move and self.networking.get_user_from_game() == 0:
+                if self.networking.is_our_move: #and self.networking.get_user_from_game() == 0:
                     self.networking.get_card()
 
     def update(self, *args: Any, **kwargs: Any) -> None:
@@ -365,7 +366,7 @@ class MainScreen(Scene):
                           self._all_cards, is_blank=False)
         }
         self._users_names = {
-            'self': UserInfo(169, 533, self.networking, 0,
+            'self': UserInfo(vw(169), vh(533), self.networking, 0,
                              self._miscellaneous_group)
         }
         if self.player_counts == 2:
@@ -472,6 +473,11 @@ class MainScreen(Scene):
             if self.turn_time <= 0:
                 self.turn_time = 30
                 self.networking.get_card()
+        if len(cur_user.deck.cards) <= 0:
+            params = {
+                "winner" : cur_user
+            }
+            self.state.move_scene(next_scene_name=scene_name.RESULT_SCENE, params=params)
 
         self._miscellaneous_group.handle_events(event)
         self._all_cards.handle_events(event)

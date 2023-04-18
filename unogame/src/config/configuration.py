@@ -8,7 +8,7 @@ import json
 from utils import action_name
 import unittest
 
-BLIND_MODE = blind_mode_name.DEFAULT
+BLIND_MODE = blind_mode_name.DEUTERANOPIA
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 CURRENT_STAGE = 0

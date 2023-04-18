@@ -1,4 +1,4 @@
 DEFAULT = "default"
-DEUTERANOPIA = "deutranopia"
+DEUTERANOPIA = "deuteranopia"
 PROTANOPIA = "protanopia"
 TRITANOPIA = "tritanopia"
