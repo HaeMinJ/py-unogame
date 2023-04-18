@@ -58,13 +58,13 @@ class LobbyScene(Scene):
 
     def create_below_buttons(self):
         btn_left = FocusableUIButton(
-            relative_rect=pygame.Rect((vw(50), get_screen_height() - 100), vp(64.95, 57)),
+            relative_rect=pygame.Rect(vw(50), get_screen_height() - vh(100), vw(64.95), vh(57)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@lobby_below_btns")
         )
         btn_right = FocusableUIButton(
-            relative_rect=pygame.Rect((get_screen_width() - 100, get_screen_height() - 100), vp(64.95, 57)),
+            relative_rect=pygame.Rect((get_screen_width() - vw(100), get_screen_height() - vh(100)), vp(64.95, 57)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_2", class_id="@lobby_below_btns")
@@ -79,13 +79,13 @@ class LobbyScene(Scene):
 
     def create_set_player_buttons(self):
         btn_add_player = FocusableUIButton(
-            relative_rect=pygame.Rect((vw(172), get_screen_height() - 200), vp(160, 83)),
+            relative_rect=pygame.Rect(vw(172), get_screen_height() - vh(200), vw(160), vh(83)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@lobby_add_btns")
         )
         btn_remove_player = FocusableUIButton(
-            relative_rect=pygame.Rect((vw(350), get_screen_height() - 200), vp(160, 83)),
+            relative_rect=pygame.Rect(vw(350), get_screen_height() - vh(200), vw(160), vh(83)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@lobby_remove_btns")
@@ -125,7 +125,7 @@ class LobbyScene(Scene):
                     self.state.move_scene(scene_name.MAIN_MENU)
 
     def draw(self):
-        font = pygame.font.SysFont('arial', 40)
+        font = pygame.font.SysFont('arial', 20)
         add_player_text = font.render('add', True, (0, 0, 0))  # 텍스트, 안티앨리어싱 여부, 텍스트 색상
         remove_player_text = font.render("remove", True, (0, 0, 0))
 
@@ -136,11 +136,9 @@ class LobbyScene(Scene):
             player_name = font.render(self.players[i].name, True, (255, 255, 255))
             x = get_screen_width() / 2 - vw(33)
             y = vh(107) + i * (self.player_bg_height + self.player_bg_margin)
-            self.screen.blit(self.other_player_bg, vp(x, y))
-            self.screen.blit(self.player_profile, vp((get_screen_width() / 2 + vw(82)),
-                                                     vh(118) + i * (self.player_bg_height + self.player_bg_margin)))
-            self.screen.blit(player_name, vp(vw(get_screen_width() / 2 + vw(180)), vh(y + vh(20))))
+            self.screen.blit(self.other_player_bg, (x, y))
+            self.screen.blit(player_name, (get_screen_width() / 2 + vw(180), y + vh(20)))
 
         self.gui_manager.draw_ui(self.screen)
-        self.screen.blit(add_player_text, vp(vw(172 + 43), get_screen_height() - 200 + 18))
-        self.screen.blit(remove_player_text, vp(vw(350 + 15), get_screen_height() - 200 + 18))
+        self.screen.blit(add_player_text, (vw(215), get_screen_height() - vh(200) + vh(18)))
+        self.screen.blit(remove_player_text, (vw(350 + 15), get_screen_height() - vh(200) + vh(18)))
