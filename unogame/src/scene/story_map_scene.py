@@ -1,11 +1,11 @@
 import pygame
 import pygame_gui
 from pygame_gui.core import ObjectID
-from config.configuration import get_screen_width, get_screen_height, vw, vh, vp, KEYBOARD_MAP
+from config.configuration import get_screen_width, get_screen_height, vw, vh, vp, KEYBOARD_MAP, get_action
 
 from scene import Scene
 from states.story_map_state import StoryMapState
-from utils import action_name, overlay_name
+from utils import action_name, overlay_name, scene_name
 from widgets import FocusableUIButton
 from utils.image_utility import load_image
 from classes.auth.user import User
@@ -17,6 +17,7 @@ class StoryMapScene(Scene):
     def __init__(self, screen, gui_manager, params=None):
         super().__init__(screen, gui_manager)
         self.state = StoryMapState()
+        self.current_focused_button = -1
 
         self.story_map_bg = load_image("story_map_img/story_map_bg.png")
         self.stage_1 = load_image("story_map_img/stage_1.png")
@@ -107,6 +108,52 @@ class StoryMapScene(Scene):
         stage_2 = self.font.render('stage 2 description', True, (0, 0, 0))
         stage_3 = self.font.render('stage 3 description', True, (0, 0, 0))
         stage_4 = self.font.render('stage 4 description', True, (0, 0, 0))
+        if event.type == pygame.KEYDOWN:
+            key_event = event.key
+            action = get_action(key_event)
+            if action == action_name.MOVE_UP or action == action_name.MOVE_LEFT:
+                self.current_focused_button = (self.current_focused_button - 1) % len(self.focusable_buttons)
+                self.gui_manager.set_focus_set(self.focusable_buttons[self.current_focused_button])
+                print(self.gui_manager.get_focus_set(), self.current_focused_button)
+
+            if action == action_name.MOVE_DOWN or action == action_name.MOVE_RIGHT:
+                self.current_focused_button = (self.current_focused_button + 1) % len(self.focusable_buttons)
+                self.gui_manager.set_focus_set(self.focusable_buttons[self.current_focused_button])
+                print(self.gui_manager.get_focus_set(), self.current_focused_button)
+                # todo: 버튼 포커싱에 맞게 움직이도록 하기.
+            if action == action_name.PAUSE:
+                self.state.toggle_configuration()
+            if action == action_name.RETURN:
+                ui_element = self.focusable_buttons[self.current_focused_button]
+                if ui_element == self.stage_buttons[0]:
+                    self.screen.blit(self.stage_1, vp(268, 51))
+                    self.screen.blit(stage_1, vp(268 + 64, 51 + 120))
+                    pygame.display.flip()
+                    pygame.time.delay(2000)
+                    self.state.start_single_play(1)
+                elif ui_element == self.stage_buttons[1]:
+                    if self.current_stage >= 1:
+                        self.screen.blit(self.stage_2, vp(331, 224))
+                        self.screen.blit(stage_2, vp(331 + 64, 224 + 120))
+                        pygame.display.flip()
+                        pygame.time.delay(2000)
+                        self.state.start_single_play(2)
+                elif ui_element == self.stage_buttons[2]:
+                    if self.current_stage >= 2:
+                        self.screen.blit(self.stage_3, vp(542, 301))
+                        self.screen.blit(stage_3, vp(542 + 64, 301 + 120))
+                        pygame.display.flip()
+                        pygame.time.delay(2000)
+                        self.state.start_single_play(3)
+                elif ui_element == self.stage_buttons[3]:
+                    if self.current_stage >= 3:
+                        self.screen.blit(self.stage_4, vp(853, 80))
+                        self.screen.blit(stage_4, vp(268 + 64, 51 + 120))
+                        pygame.display.flip()
+                        pygame.time.delay(2000)
+                        self.state.start_single_play(4)
+
+
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.stage_buttons[0]:
