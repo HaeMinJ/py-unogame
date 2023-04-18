@@ -37,7 +37,7 @@ class StoryMapScene(Scene):
         self.resize_images()
         self.initialize_elements()
 
-        self.font = pygame.font.SysFont('arial', 20)
+        self.font = pygame.font.SysFont('arial', 15)
 
     def resize_images(self):
         super().resize_images()
@@ -55,25 +55,25 @@ class StoryMapScene(Scene):
 
     def create_stage_buttons(self):
         btn_stage_1 = FocusableUIButton(
-            relative_rect=pygame.Rect((vw(0), vh(51)), vp(262, 309)),
+            relative_rect=pygame.Rect(vw(0), vh(51), vw(262), vh(309)),
             text="stage1",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@stage_btn")
         )
         btn_stage_2 = FocusableUIButton(
-            relative_rect=pygame.Rect((vw(256), get_screen_height() - 380), vp(217, 239)),
+            relative_rect=pygame.Rect(vw(256), get_screen_height() - vh(380), vw(217), vh(239)),
             text="stage2",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@stage_btn")
         )
         btn_stage_3 = FocusableUIButton(
-            relative_rect=pygame.Rect((vw(635), get_screen_height() - 175), vp(245, 156)),
+            relative_rect=pygame.Rect(vw(635), get_screen_height() - vh(175), vw(245), vh(156)),
             text="stage3",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@stage_btn")
         )
         btn_stage_4 = FocusableUIButton(
-            relative_rect=pygame.Rect((vw(939), get_screen_height() - 557), vp(306, 437)),
+            relative_rect=pygame.Rect(vw(939), get_screen_height() - vh(557), vw(306), vh(437)),
             text="stage4",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@stage_btn")
@@ -143,7 +143,7 @@ class StoryMapScene(Scene):
 
         for i in range(len(self.stage_buttons)):
             if i > self.current_stage:
-                self.screen.blit(self.lock, vp(self.stage_buttons[i].rect.x - vw(50), self.stage_buttons[i].rect.y - vh(80)))
+                self.screen.blit(self.lock, (self.stage_buttons[i].rect.x - vw(50), self.stage_buttons[i].rect.y - vh(80)))
 
 
 

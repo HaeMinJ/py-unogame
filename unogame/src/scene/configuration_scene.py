@@ -56,7 +56,7 @@ class ConfigurationOverlayScene(OverlayScene):
         self.size_buttons = []
         self.current_width = 1280
         self.current_height = 720
-        self.current_blind = "normal_vision"
+        self.current_blind = "default"
 
         self.panel.drawable_shape.states['normal'].surface.blit(self.overlay_bg_image, (0, 0))
         self.panel.drawable_shape.active_state.has_fresh_surface = True
