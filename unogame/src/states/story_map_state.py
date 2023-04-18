@@ -1,6 +1,6 @@
 from classes.auth.user import User
 from states import GameState
-from utils import scene_name
+from utils import scene_name, overlay_name
 
 
 class StoryMapState(GameState):
@@ -13,3 +13,9 @@ class StoryMapState(GameState):
         elif STAGE_NAME == 2:
             self.move_scene(scene_name.PLAYING_SCENE, [User(0,"Me",is_ai=False), User(1, "Minsu",is_ai=True), User(2, "Amy",is_ai=True)])
         #todo 3,4,5 넣기.
+
+    def toggle_configuration(self):
+        if self.overlay_active:
+            self.inactive_overlay(overlay_name.CONFIGURATION)
+        else:
+            self.active_overlay(overlay_name.CONFIGURATION)
