@@ -20,6 +20,8 @@ class LobbyScene(Scene):
     def __init__(self, screen, gui_manager, params=None):
         super().__init__(screen, gui_manager, params)
         self.state = LobbyState()
+        self.current_focused_button = -1
+
 
         self.lobby_image = load_image("lobby_img/lobby_bg.png")
         self.btn_left = load_image("lobby_img/btn_left.png")
@@ -102,13 +104,36 @@ class LobbyScene(Scene):
         if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
             if event.ui_element == self.text_input:
                 self.player_name = self.text_input.get_text()
-        # if event.type == pygame.KEYDOWN:
-        #     key_event = event.key
-        #     action = get_action(key_event)
-        #     if action == action_name.RETURN:
-        #         self.state.start_single_play(self.players)
-        #     if action == action_name.PAUSE:
-        #         self.state.active_overlay(overlay_name.CONFIGURATION)
+        if event.type == pygame.KEYDOWN:
+            key_event = event.key
+            action = get_action(key_event)
+            if action == action_name.MOVE_UP or action == action_name.MOVE_LEFT:
+                self.current_focused_button = (self.current_focused_button - 1) % len(self.focusable_buttons)
+                self.gui_manager.set_focus_set(self.focusable_buttons[self.current_focused_button])
+                print(self.gui_manager.get_focus_set(), self.current_focused_button)
+
+            if action == action_name.MOVE_DOWN or action == action_name.MOVE_RIGHT:
+                self.current_focused_button = (self.current_focused_button + 1) % len(self.focusable_buttons)
+                self.gui_manager.set_focus_set(self.focusable_buttons[self.current_focused_button])
+                print(self.gui_manager.get_focus_set(), self.current_focused_button)
+                # todo: 버튼 포커싱에 맞게 움직이도록 하기.
+            if action == action_name.PAUSE:
+                self.state.toggle_configuration()
+            if action == action_name.RETURN:
+                ui_element = self.focusable_buttons[self.current_focused_button]
+                if ui_element == self.set_player_buttons[0]:
+                    if len(self.players) < 5:
+                        self.players.append(User(len(self.players) + 1, f"player{len(self.players) + 1}", is_ai=True))
+                elif ui_element == self.set_player_buttons[1]:
+                    if len(self.players) > 1:
+                        self.players.pop()
+                elif ui_element == self.move_scene_buttons[0]:
+                    self.state.move_scene(scene_name.MAIN_MENU)
+                elif ui_element == self.move_scene_buttons[1]:
+                    self.player_name = self.text_input.get_text()
+                    self.players.insert(0, User(0, self.player_name, is_ai=False))
+                    self.state.start_single_play(players=self.players)
+
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.set_player_buttons[0]:
