@@ -87,12 +87,31 @@ def save_config_to_file():
 
 
 async def load_config_from_file():
-    with open("config.json", "r") as f:
-        configurations = json.load(f)
-        print(configurations)
-    convert_to_current_config(configurations)
-    convert_keybinding(configurations["keybinding"])
-    pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
+    filename="config.json"
+    configurations = {
+        "BLIND_MODE": BLIND_MODE,
+        "SCREEN_HEIGHT": SCREEN_HEIGHT,
+        "SCREEN_WIDTH": SCREEN_WIDTH,
+        "keybinding": KEYBOARD_MAP,
+        "CURRENT_STAGE": CURRENT_STAGE,
+        "SOUND_VOLUME": SOUND_VOLUME,
+        "SOUND_ON": SOUND_ON
+    }
+    try:
+        with open(filename, "a") as f:
+            configurations = json.load(f)
+            convert_to_current_config(configurations)
+            convert_keybinding(configurations["keybinding"])
+            pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    except FileNotFoundError:
+        print(f"The file '{filename}' does not exist. Creating a new file.")
+        with open(filename, 'w') as file:
+            # The file is created
+            # Add your file operations here, e.g., writing to the file
+            file.write("This is a new line.\n")
+    except IOError as e:
+        print(f"An error occurred while opening/creating the file: {e}")
+
     return configurations
 
 def convert_to_current_config(configurations):

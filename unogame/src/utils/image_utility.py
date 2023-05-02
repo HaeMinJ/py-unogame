@@ -2,10 +2,11 @@ import os
 import pygame
 
 from config import configuration
+from utils.resource_path import resource_path
 
 
 def load_image(name: str, colorkey: int = None, directory: str = 'assets/'+configuration.BLIND_MODE):
-    fullname = os.path.join(directory, name)
+    fullname = resource_path(os.path.join(directory, name))
     if not os.path.isfile(fullname):
         raise FileNotFoundError(f"해당하는 파일이 없습니다. '{fullname}'")
     image = pygame.image.load(fullname)

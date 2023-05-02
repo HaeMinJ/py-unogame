@@ -7,6 +7,7 @@ from scene.main_screen import MainScreen
 from scene.result_scene import ResultScene
 from utils import scene_name, overlay_name
 from scene import MenuScene,LandingScene,PlayingScene,ConfigurationOverlayScene, StoryMapScene
+from utils.resource_path import resource_path
 
 
 class SceneManager:
@@ -26,8 +27,8 @@ class SceneManager:
         self.current_sound_on = configuration.is_sound_on()
 
         self.sounds = {
-            "LOBBY":  pygame.mixer.Sound("assets/sound/lobby.mp3"),
-            "PLAYING": pygame.mixer.Sound("assets/sound/game.mp3")
+            "LOBBY":  pygame.mixer.Sound(resource_path("assets/sound/lobby.mp3")),
+            "PLAYING": pygame.mixer.Sound(resource_path("assets/sound/game.mp3"))
         }
 
         self.scenes = {

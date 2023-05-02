@@ -18,6 +18,7 @@ from states import PlayingState
 from utils import scene_name
 from utils.card_utility import card_image, random_cards
 from utils.image_utility import load_image
+from utils.resource_path import resource_path
 from utils.text_utility import truncate
 import time
 
@@ -92,9 +93,9 @@ class UserInfo(pygame.sprite.Sprite):
         super().__init__(*groups)
         self.networking = networking
         self.user_index = user_index
-        self.name_font = pygame.freetype.Font('assets/fonts/Roboto-Regular.ttf', 20)
+        self.name_font = pygame.freetype.Font(resource_path('assets/fonts/Roboto-Regular.ttf'), 20)
         self.name_font.fgcolor = pygame.color.Color('White')
-        self.cards_amount_font = pygame.freetype.Font('assets/fonts/Roboto-Regular.ttf', 20)
+        self.cards_amount_font = pygame.freetype.Font(resource_path('assets/fonts/Roboto-Regular.ttf'), 20)
         self.cards_amount_font.fgcolor = pygame.color.Color('Black')
         # self.font.bgcolor = pygame.color.Color('Black')
         self._background = load_image('images/player_info.png')
@@ -221,10 +222,10 @@ class Cards(pygame.sprite.Sprite):
         self.card_set = load_image('images/cards.png')
         self._active_card_index = -1
         self.rotation = rotation
-        self.wrong_sound = pygame.mixer.Sound("assets/sound/wrong.mp3")
+        self.wrong_sound = pygame.mixer.Sound(resource_path("assets/sound/wrong.mp3"))
         from config import configuration
         self.wrong_sound.set_volume(configuration.get_sound_volume())
-        self.throw_sound = pygame.mixer.Sound("assets/sound/throw_card.mp3")
+        self.throw_sound = pygame.mixer.Sound(resource_path("assets/sound/throw_card.mp3"))
         self.throw_sound.set_volume(configuration.get_sound_volume())
 
     def handle_events(self, event):
@@ -412,10 +413,10 @@ class MainScreen(Scene):
                                      self._all_cards)
 
         self.background = load_image('images/main.png')
-        self.error_font = pygame.freetype.Font('assets/fonts/Roboto-Regular.ttf', 20)
+        self.error_font = pygame.freetype.Font(resource_path('assets/fonts/Roboto-Regular.ttf'), 20)
         self.error_font.fgcolor = pygame.color.Color('White')
         self.last_user = self.networking.user
-        self.first_sound = pygame.mixer.Sound("assets/sound/shuffle_card.mp3")
+        self.first_sound = pygame.mixer.Sound(resource_path("assets/sound/shuffle_card.mp3"))
 
         from config import configuration
         self.first_sound.set_volume(configuration.get_sound_volume())
