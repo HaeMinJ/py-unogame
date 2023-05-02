@@ -4,7 +4,7 @@ import pygame
 import sys
 from pygame.locals import *
 
-import pygame_gui
+import pygame_gui # 주석
 
 from utils.scene_manager import SceneManager
 from config import get_screen_width, get_screen_height, vw, vh, configuration
