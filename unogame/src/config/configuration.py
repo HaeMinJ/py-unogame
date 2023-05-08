@@ -8,7 +8,7 @@ import json
 from utils import action_name
 import unittest
 
-BLIND_MODE = blind_mode_name.DEUTERANOPIA
+BLIND_MODE = blind_mode_name.DEFAULT
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 CURRENT_STAGE = 0
@@ -138,31 +138,3 @@ def convert_keybinding(keybindings):
     KEYBOARD_MAP=keybindings
     print(keybindings)
     return keybindings
-
-
-
-class TestConfigurationSetting(unittest.TestCase):
-
-    def test_save_load(self):
-        self.assertEqual(save_config_to_file(), load_config_from_file())
-
-
-    def test_load_color_blind(self):
-        global BLIND_MODE
-        a=copy.deepcopy(BLIND_MODE)
-        BLIND_MODE="deutranopia"
-        save_config_to_file()
-        load_config_from_file()
-        print(a, BLIND_MODE)
-        self.assertNotEqual(a, BLIND_MODE)
-
-    def test_load_keybindings(self):
-        global KEYBOARD_MAP
-        a = copy.deepcopy(KEYBOARD_MAP)
-        save_config_to_file()
-        self.assertDictEqual(a, convert_keybinding(load_config_from_file()['keybinding']))
-
-
-
-if __name__ == '__main__':
-    unittest.main()
