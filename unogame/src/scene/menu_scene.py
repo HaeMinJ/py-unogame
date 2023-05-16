@@ -31,7 +31,6 @@ class MenuScene(Scene):
         self.btn_ranking = load_image("btn_ranking.png")
         self.btn_setting = load_image("btn_setting.png")
 
-
         self.scrollable_area_rect = pygame.Rect(vw(0), vh(124), get_screen_width(), vh(403))
         self.scrollable_button_width = vw(289)
         self.scrollable_button_height = vh(403)
