@@ -41,7 +41,7 @@ class MenuScene(Scene):
             manager=self.gui_manager
         )
 
-        self.scroll_buttons_text = ["Single Play", "StoryMode Play"]
+        self.scroll_buttons_text = ["Single Play", "StoryMode Play", "Multi Play"]
 
         self.scrollable_buttons = []
         self.scroll_offset_x = 0
@@ -155,9 +155,11 @@ class MenuScene(Scene):
                     self.state.start_single_play()
                 elif ui_element == self.scrollable_buttons[1]:
                     self.state.open_story_play()
-                elif ui_element == self.focusable_buttons[2]:
-                    self.state.open_configuration()
+                elif ui_element == self.scrollable_buttons[2]:
+                    self.state.open_multi_play()
                 elif ui_element == self.focusable_buttons[4]:
+                    self.state.open_configuration()
+                elif ui_element == self.focusable_buttons[5]:
                     self.state.exit()
 
 
