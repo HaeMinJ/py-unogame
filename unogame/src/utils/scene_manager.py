@@ -8,6 +8,8 @@ from scene.multi_access_scene import MultiAccessScene
 from scene.multi_game_scene import MultiGameScene
 from scene.multi_robby_scene import MultiRobbyScene
 from scene.multi_role_scene import MultiRoleScene
+from scene.multi_password_scene import MultiPasswordScene
+
 from scene.result_scene import ResultScene
 from utils import scene_name, overlay_name
 from scene import MenuScene,LandingScene,PlayingScene,ConfigurationOverlayScene, StoryMapScene
@@ -45,6 +47,7 @@ class SceneManager:
             scene_name.RESULT_SCENE: ResultScene,
             scene_name.MULTI_ROLE_SCENE : MultiRoleScene,
             scene_name.MULTI_ACCESS_SCENE: MultiAccessScene,
+            scene_name.MULTI_PASSWORD_SCENE: MultiPasswordScene,
             scene_name.MULTI_GAME_SCENE: MultiGameScene,
             scene_name.MULTI_ROBBY_SCENE: MultiRobbyScene
         }
@@ -54,7 +57,7 @@ class SceneManager:
         self.current_sound = self.sounds["LOBBY"]
         self.current_sound.play()
         params = {"winner":User(0,'haemin')}
-        self.current_scene = self.scenes[scene_name.PLAYING_GAME](screen, gui_manager)
+        self.current_scene = self.scenes[scene_name.MULTI_ROLE_SCENE](screen, gui_manager)
         self.current_overlay = self.overlay_scenes[overlay_name.CONFIGURATION](screen, overlay_manager)
 
     def update(self):

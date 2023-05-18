@@ -23,7 +23,7 @@ class PlayingScene(Scene):
         super().__init__(screen, gui_manager, params)  # , image_loader)
         self.state = PlayingState()
         print(params)
-        self.draw_players()
+        # self.draw_players()
         self.card_stack = pygame.image.load("assets/playing_game_img/card_stack.png")
         self.btn_deck = pygame.image.load("assets/playing_game_img/deck.png")
         self.btn_uno = pygame.image.load("assets/playing_game_img/btn_uno.png")
