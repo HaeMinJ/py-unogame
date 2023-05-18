@@ -64,19 +64,19 @@ class PlayingScene(Scene):
 
     def create_card_buttons(self):
         btn_deck = FocusableUIButton(
-            relative_rect=pygame.Rect((get_screen_width()/2 - (127+25), vh(241)), vp(127, 188)),
+            relative_rect=pygame.Rect(vp(get_screen_width()/2 - (127+25), vh(241)), vp(127, 188)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_deck")
         )
         btn_uno = FocusableUIButton(
-            relative_rect=pygame.Rect((get_screen_width()/2 + 150, get_screen_height() / 2 - 60), vp(163, 115)),
+            relative_rect=pygame.Rect(vp(get_screen_width()/2 + 150, get_screen_height() / 2 - 60), vp(163, 115)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_uno")
         )
         btn_pause = FocusableUIButton(
-            relative_rect=pygame.Rect((vw(23), get_screen_height() - 143), vp(91, 129)),
+            relative_rect=pygame.Rect(vp(vw(23), get_screen_height() - 143), vp(91, 129)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_pause")
@@ -93,13 +93,13 @@ class PlayingScene(Scene):
 
     def create_side_buttons(self):
         btn_view_cards = FocusableUIButton(
-            relative_rect=pygame.Rect((get_screen_width() - 200, get_screen_height() / 2 - 140), vp(199, 107)),
+            relative_rect=pygame.Rect(vp(get_screen_width() - 200, get_screen_height() / 2 - 140), vp(199, 107)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_view_cards")
         )
         btn_turn_off = FocusableUIButton(
-            relative_rect=pygame.Rect((get_screen_width() - 180, get_screen_height() / 2 - 20), vp(179, 110)),
+            relative_rect=pygame.Rect(vp(get_screen_width() - 180, get_screen_height() / 2 - 20), vp(179, 110)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_turn_off")
@@ -126,7 +126,9 @@ class PlayingScene(Scene):
         self.screen.blit(self.small_card, vp(get_screen_width() / 2 + 40, get_screen_height() - 180))
 
         for i in range(len(self.opponent_players)):
-            x = 40 + i * 260
+            for j in range(i):
+                i *= -1
+            x = (get_screen_width()/2 - 150) + i * 140
             y = 0
             self.screen.blit(self.opponent_players[i], vp(x, y + 70))
             self.screen.blit(self.small_card, vp(x + 90, y + 100))
