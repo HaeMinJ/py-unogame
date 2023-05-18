@@ -8,6 +8,8 @@ from scene.multi_access_scene import MultiAccessScene
 from scene.multi_game_scene import MultiGameScene
 from scene.multi_robby_scene import MultiRobbyScene
 from scene.multi_role_scene import MultiRoleScene
+from scene.multi_password_scene import MultiPasswordScene
+
 from scene.result_scene import ResultScene
 from utils import scene_name, overlay_name
 from scene import MenuScene,LandingScene,PlayingScene,ConfigurationOverlayScene, StoryMapScene
@@ -45,6 +47,7 @@ class SceneManager:
             scene_name.RESULT_SCENE: ResultScene,
             scene_name.MULTI_ROLE_SCENE : MultiRoleScene,
             scene_name.MULTI_ACCESS_SCENE: MultiAccessScene,
+            scene_name.MULTI_PASSWORD_SCENE: MultiPasswordScene,
             scene_name.MULTI_GAME_SCENE: MultiGameScene,
             scene_name.MULTI_ROBBY_SCENE: MultiRobbyScene
         }
