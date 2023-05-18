@@ -13,7 +13,7 @@ from classes.enums.colors import Colors
 from classes.enums.directions import Directions
 from classes.game.networking import Networking
 from config import vw, vp, vh
-from scene import Scene, LandingScene
+from scene import Scene
 from states import PlayingState
 from utils import scene_name
 from utils.card_utility import card_image, random_cards

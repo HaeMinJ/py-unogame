@@ -53,8 +53,9 @@ class SceneManager:
         }
         self.current_sound = self.sounds["LOBBY"]
         self.current_sound.play()
-        params = {"winner":User(0,'haemin')}
-        self.current_scene = self.scenes[scene_name.PLAYING_GAME](screen, gui_manager)
+        params = [User(0, "Me"), User(1, "Computer1", is_ai=True), User(2, "Computer2", is_ai=True),
+                       User(3, "Computer3", is_ai=True)]
+        self.current_scene = self.scenes[scene_name.PLAYING_GAME](screen, gui_manager,params)
         self.current_overlay = self.overlay_scenes[overlay_name.CONFIGURATION](screen, overlay_manager)
 
     def update(self):
