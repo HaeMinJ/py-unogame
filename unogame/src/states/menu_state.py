@@ -15,6 +15,16 @@ class MenuState(GameState):
     def open_configuration(self):
         self.active_overlay(overlay_name.CONFIGURATION)
 
+    def open_achievement(self):
+        self.active_overlay(overlay_name.ACHIEVEMENT)
+
+    def toggle_achievement(self):
+        if self.overlay_active:
+            self.inactive_overlay(overlay_name.ACHIEVEMENT)
+        else:
+            self.active_overlay(overlay_name.ACHIEVEMENT)
+
+
     def toggle_configuration(self):
         if self.overlay_active:
             self.inactive_overlay(overlay_name.CONFIGURATION)

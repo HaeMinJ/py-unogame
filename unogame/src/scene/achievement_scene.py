@@ -5,7 +5,7 @@ from pygame_gui.core import ObjectID
 from assets import image_keys
 from assets.image_loader import ImageLoader
 from config import vp, vw, vh, get_screen_width, get_screen_height, get_action
-from states import AchievementState
+from states.achievement_state import AchievementState
 from utils import action_name
 from utils.image_utility import load_image
 from widgets.overlay import OverlayScene
@@ -16,7 +16,7 @@ class AchievementOverlayScene(OverlayScene):
 
     def __init__(self, screen, overlay_manager):
         super().__init__(screen, overlay_manager)
-
+        print("Achievement Overlay Init!")
         self.tab_button_clicked = False
 
         self.close_btn_image = load_image("btn_close_overlay.png")
@@ -95,11 +95,19 @@ class AchievementOverlayScene(OverlayScene):
             object_id=ObjectID(object_id="overlay_panel", class_id="@overlay_panels")
         )
 
-        self.overlay_bg_image = load_image("config_overlay_bg.png")
-        self.overlay_bg_image = pygame.transform.smoothscale(self.overlay_bg_image, vp(984, 633))
+        # self.overlay_bg_image = load_image("config_overlay_bg.png")
+        # self.overlay_bg_image = pygame.transform.smoothscale(self.overlay_bg_image, vp(984, 633))
+        #
+        # self.date_btn_image = load_image("btn_date_overlay.png")
+        # self.date_btn_image = pygame.transform.smoothscale(self.date_btn, vp(210, 60))
+        #
+        # self.clear_btn_image = load_image("btn_clear_overlay.png")
+        # self.clear_btn_image = pygame.transform.smoothscale(self.clear_btn, vp(210, 60))
 
-        self.date_btn_image = load_image("btn_date_overlay.png")
-        self.date_btn_image = pygame.transform.smoothscale(self.date_btn, vp(210, 60))
-
-        self.clear_btn_image = load_image("btn_clear_overlay.png")
-        self.clear_btn_image = pygame.transform.smoothscale(self.clear_btn, vp(210, 60))
+    def process_events(self, event):
+        super().process_events(event)
+        if event.type == pygame.KEYDOWN:
+            key_event = event.key
+            action = get_action(key_event)
+            if action == action_name.PAUSE:
+                self.set_inactive()

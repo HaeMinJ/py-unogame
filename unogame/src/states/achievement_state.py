@@ -2,7 +2,6 @@ import string
 
 from states import GameState
 from utils import scene_name
-from achieve import achievement
 
 
 class AchievementState(GameState):

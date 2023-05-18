@@ -2,6 +2,7 @@ import pygame
 
 from classes.auth.user import User
 from classes.game.networking import Networking
+from scene.achievement_scene import AchievementOverlayScene
 from scene.lobby_scene import LobbyScene
 from scene.main_screen import MainScreen
 from scene.result_scene import ResultScene
@@ -41,13 +42,14 @@ class SceneManager:
             scene_name.RESULT_SCENE: ResultScene
         }
         self.overlay_scenes = {
-            overlay_name.CONFIGURATION: ConfigurationOverlayScene
+            overlay_name.CONFIGURATION: ConfigurationOverlayScene,
+            overlay_name.ACHIEVEMENT: AchievementOverlayScene
         }
         self.current_sound = self.sounds["LOBBY"]
         self.current_sound.play()
         params = {"winner":User(0,'haemin')}
         self.current_scene = self.scenes[scene_name.MAIN_MENU](screen, gui_manager)
-        self.current_overlay = self.overlay_scenes[overlay_name.CONFIGURATION](screen, overlay_manager)
+        self.current_overlay = self.overlay_scenes[overlay_name.ACHIEVEMENT](screen, overlay_manager)
 
     def update(self):
         from config import configuration
