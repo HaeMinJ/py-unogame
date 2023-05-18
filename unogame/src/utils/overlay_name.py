@@ -1,1 +1,1 @@
-CONFIGURATION = "configuration"
+CONFIGURATION = "configuration_img"
