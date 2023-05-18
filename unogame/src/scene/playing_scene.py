@@ -12,6 +12,8 @@ from widgets import FocusableUIButton
 
 
 
+
+
 class PlayingScene(Scene):
     def initialize_elements(self):
         self.create_card_buttons()
@@ -21,7 +23,7 @@ class PlayingScene(Scene):
         super().__init__(screen, gui_manager, params)  # , image_loader)
         self.state = PlayingState()
         print(params)
-
+        self.draw_players()
         self.card_stack = pygame.image.load("assets/playing_game_img/card_stack.png")
         self.btn_deck = pygame.image.load("assets/playing_game_img/deck.png")
         self.btn_uno = pygame.image.load("assets/playing_game_img/btn_uno.png")
@@ -45,6 +47,9 @@ class PlayingScene(Scene):
         self.resize_images()
         self.initialize_elements()
 
+    def draw_players(self, players):
+        #todo pygame_gui로 players 만큼 그리기
+        pass
     def resize_images(self):
         #self.card_image = pygame.transform.smoothscale(self.card_image, vp(110, 176))
         super().resize_images()
