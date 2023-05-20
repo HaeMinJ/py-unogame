@@ -81,16 +81,6 @@ class StoryMapScene(Scene):
         self.resize_images()
         self.initialize_elements()
 
-        self.font = pygame.font.SysFont('arial', 15)
-        self.stage_1_text = self.font.render('Do you want to start Stage 1?', True, (0, 0, 0))
-        self.stage_2_text = self.font.render('Do you want to start Stage 2?', True, (0, 0, 0))
-        self.stage_3_text = self.font.render('Do you want to start Stage 3?', True, (0, 0, 0))
-        self.stage_4_text = self.font.render('Do you want to start Stage 4?', True, (0, 0, 0))
-        self.stage_1_text_visible = False
-        self.stage_2_text_visible = False
-        self.stage_3_text_visible = False
-        self.stage_4_text_visible = False
-
     def resize_images(self):
         super().resize_images()
         self.story_map_bg = pygame.transform.scale(self.story_map_bg, (get_screen_width(), get_screen_height()))
@@ -148,21 +138,21 @@ class StoryMapScene(Scene):
             object_id=ObjectID(object_id=f"button_b_1", class_id="@start_btn")
         )
         btn_start_game_2 = FocusableUIButton(
-            relative_rect=pygame.Rect(vp(440, 450), vp(134, 42)),
+            relative_rect=pygame.Rect(vp(440, 500), vp(134, 42)),
             text="start",
             manager=self.gui_manager,
             starting_height=3,
             object_id=ObjectID(object_id=f"button_b_2", class_id="@start_btn")
         )
         btn_start_game_3 = FocusableUIButton(
-            relative_rect=pygame.Rect(vp(660, 530), vp(134, 42)),
+            relative_rect=pygame.Rect(vp(660, 580), vp(134, 42)),
             text="start",
             manager=self.gui_manager,
             starting_height=3,
             object_id=ObjectID(object_id=f"button_b_3", class_id="@start_btn")
         )
         btn_start_game_4 = FocusableUIButton(
-            relative_rect=pygame.Rect(vp(970, 300), vp(134, 42)),
+            relative_rect=pygame.Rect(vp(970, 350), vp(134, 42)),
             text="start",
             manager=self.gui_manager,
             starting_height=3,
@@ -202,103 +192,101 @@ class StoryMapScene(Scene):
             if action == action_name.RETURN:
                 ui_element = self.focusable_buttons[self.current_focused_button]
                 if ui_element == self.stage_buttons[0]:
-                    self.screen.blit(self.stage_1, vp(268, 51))
-                    self.screen.blit(stage_1, vp(100, 100))
-                    pygame.display.flip()
-                    pygame.time.delay(2000)
-                    self.state.start_single_play(1)
+                    self.stage_2_panel.visible = False
+                    self.play_buttons[1].visible = False
+                    self.stage_3_panel.visible = False
+                    self.play_buttons[2].visible = False
+                    self.stage_4_panel.visible = False
+                    self.play_buttons[3].visible = False
+                    self.stage_1_panel.visible = True
+                    self.play_buttons[0].visible = True
                 elif ui_element == self.stage_buttons[1]:
                     if self.current_stage >= 1:
-                        self.screen.blit(self.stage_2, vp(331, 224))
-                        self.screen.blit(stage_2, vp(331 + 64, 224 + 120))
-                        pygame.display.flip()
-                        pygame.time.delay(2000)
-                        self.state.start_single_play(2)
+                        self.stage_1_panel.visible = False
+                        self.play_buttons[0].visible = False
+                        self.stage_3_panel.visible = False
+                        self.play_buttons[2].visible = False
+                        self.stage_4_panel.visible = False
+                        self.play_buttons[3].visible = False
+                        self.stage_2_panel.visible = True
+                        self.play_buttons[1].visible = True
                 elif ui_element == self.stage_buttons[2]:
                     if self.current_stage >= 2:
-                        self.screen.blit(self.stage_3, vp(542, 301))
-                        self.screen.blit(stage_3, vp(542 + 64, 301 + 120))
-                        pygame.display.flip()
-                        pygame.time.delay(2000)
-                        self.state.start_single_play(3)
+                        self.stage_2_panel.visible = False
+                        self.play_buttons[1].visible = False
+                        self.stage_1_panel.visible = False
+                        self.play_buttons[0].visible = False
+                        self.stage_4_panel.visible = False
+                        self.play_buttons[3].visible = False
+                        self.stage_3_panel.visible = True
+                        self.play_buttons[2].visible = True
                 elif ui_element == self.stage_buttons[3]:
                     if self.current_stage >= 3:
-                        self.screen.blit(self.stage_4, vp(853, 80))
-                        self.screen.blit(stage_4, vp(268 + 64, 51 + 120))
-                        pygame.display.flip()
-                        pygame.time.delay(2000)
-                        self.state.start_single_play(4)
+                        self.stage_2_panel.visible = False
+                        self.play_buttons[1].visible = False
+                        self.stage_3_panel.visible = False
+                        self.play_buttons[2].visible = False
+                        self.stage_1_panel.visible = False
+                        self.play_buttons[0].visible = False
+                        self.stage_4_panel.visible = True
+                        self.play_buttons[3].visible = True
 
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.stage_buttons[0]:
                     self.stage_2_panel.visible = False
-                    self.stage_2_text_visible = False
                     self.play_buttons[1].visible = False
                     self.stage_3_panel.visible = False
-                    self.stage_3_text_visible = False
                     self.play_buttons[2].visible = False
                     self.stage_4_panel.visible = False
-                    self.stage_4_text_visible = False
                     self.play_buttons[3].visible = False
                     self.stage_1_panel.visible = True
-                    self.stage_1_text_visible = True
                     self.play_buttons[0].visible = True
+
                 if event.ui_element == self.stage_buttons[1]:
                     if self.current_stage >= 1:
                         self.stage_1_panel.visible = False
-                        self.stage_1_text_visible = False
                         self.play_buttons[0].visible = False
                         self.stage_3_panel.visible = False
-                        self.stage_3_text_visible = False
                         self.play_buttons[2].visible = False
                         self.stage_4_panel.visible = False
-                        self.stage_4_text_visible = False
                         self.play_buttons[3].visible = False
                         self.stage_2_panel.visible = True
-                        self.stage_2_text_visible = True
                         self.play_buttons[1].visible = True
+
                 if event.ui_element == self.stage_buttons[2]:
                     if self.current_stage >= 2:
                         self.stage_2_panel.visible = False
-                        self.stage_2_text_visible = False
                         self.play_buttons[1].visible = False
                         self.stage_1_panel.visible = False
-                        self.stage_1_text_visible = False
                         self.play_buttons[0].visible = False
                         self.stage_4_panel.visible = False
-                        self.stage_4_text_visible = False
                         self.play_buttons[3].visible = False
                         self.stage_3_panel.visible = True
-                        self.stage_3_text_visible = True
                         self.play_buttons[2].visible = True
+
                 if event.ui_element == self.stage_buttons[3]:
                     if self.current_stage >= 3:
                         self.stage_2_panel.visible = False
-                        self.stage_2_text_visible = False
                         self.play_buttons[1].visible = False
                         self.stage_3_panel.visible = False
-                        self.stage_3_text_visible = False
                         self.play_buttons[2].visible = False
                         self.stage_1_panel.visible = False
-                        self.stage_1_text_visible = False
                         self.play_buttons[0].visible = False
                         self.stage_4_panel.visible = True
-                        self.stage_4_text_visible = True
                         self.play_buttons[3].visible = True
-                        # self.state.start_single_play(4)
 
     def draw(self):
         self.screen.blit(self.story_map_bg, vp(0, 0))
         self.gui_manager.draw_ui(self.screen)
-        if self.stage_1_text_visible:
-            self.screen.blit(self.stage_1_text, vp(331, 224))
-        if self.stage_2_text_visible:
-            self.screen.blit(self.stage_2_text, vp(400, 400))
-        if self.stage_3_text_visible:
-            self.screen.blit(self.stage_3_text, vp(600, 450))
-        if self.stage_4_text_visible:
-            self.screen.blit(self.stage_4_text, vp(900, 224))
+        # if self.stage_1_text_visible:
+        #     self.screen.blit(self.stage_1_text, vp(331, 224))
+        # if self.stage_2_text_visible:
+        #     self.screen.blit(self.stage_2_text, vp(400, 400))
+        # if self.stage_3_text_visible:
+        #     self.screen.blit(self.stage_3_text, vp(600, 450))
+        # if self.stage_4_text_visible:
+        #     self.screen.blit(self.stage_4_text, vp(900, 224))
 
         for i in range(len(self.stage_buttons)):
             if i > self.current_stage:
