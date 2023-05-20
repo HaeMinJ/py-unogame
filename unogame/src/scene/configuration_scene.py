@@ -432,7 +432,6 @@ class ConfigurationOverlayScene(OverlayScene):
                     if event.ui_element == self.tab_buttons[2]:
                         self.fire_tab_button_2_event()
 
-
                 if event.ui_element == self.initialize_settings_button:
                     self.current_width = 1280
                     self.current_height = 720
