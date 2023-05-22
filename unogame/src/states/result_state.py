@@ -14,4 +14,5 @@ class ResultState(GameState):
         if event.type == self.timer_event:
             self.move_scene(scene_name.MAIN_MENU)
 
-
+    def go_main_menu(self):
+        self.move_scene(scene_name.MAIN_MENU)

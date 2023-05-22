@@ -64,6 +64,8 @@ KEYBOARD_MAP = {
     pygame.K_SPACE: action_name.FIRE,
     pygame.K_ESCAPE: action_name.PAUSE,
     pygame.K_RETURN: action_name.RETURN,
+    pygame.K_c: action_name.CARD_GIVER
+
     # Add more key-action mappings here
 }
 def set_keyboard_map(up, down, left, right):

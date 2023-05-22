@@ -224,6 +224,7 @@ class Cards(pygame.sprite.Sprite):
         self.rotation = rotation
         self.wrong_sound = pygame.mixer.Sound(resource_path("assets/sound/wrong.mp3"))
         from config import configuration
+
         self.wrong_sound.set_volume(int(configuration.get_whole_sound_volume())/100)
         self.throw_sound = pygame.mixer.Sound(resource_path("assets/sound/throw_card.mp3"))
         self.throw_sound.set_volume(int(configuration.get_whole_sound_volume())/100)
@@ -419,6 +420,7 @@ class MainScreen(Scene):
         self.first_sound = pygame.mixer.Sound(resource_path("assets/sound/shuffle_card.mp3"))
 
         from config import configuration
+
         self.first_sound.set_volume(int(configuration.get_whole_sound_volume())/100)
         if configuration.is_sound_on():
             self.first_sound.play(1)
