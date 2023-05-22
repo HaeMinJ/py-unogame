@@ -8,6 +8,7 @@ from pygame_gui.elements import UIButton, UILabel
 
 from classes.game.networking import Networking
 from config.configuration import get_screen_width, get_screen_height, vw, vh, vp, KEYBOARD_MAP, get_action
+from config import configuration
 
 from assets import image_keys
 from assets.image_loader import ImageLoader
@@ -49,10 +50,11 @@ class Cards(pygame.sprite.Sprite):
         self._active_card_index = -1
         self.rotation = rotation
         self.wrong_sound = pygame.mixer.Sound(resource_path("assets/sound/wrong.mp3"))
-        from config import configuration
-        self.wrong_sound.set_volume(configuration.get_whole_sound_volume())
+        self.wrong_sound.set_volume(int(configuration.get_effect_sound_volume()) / 100)
         self.throw_sound = pygame.mixer.Sound(resource_path("assets/sound/throw_card.mp3"))
-        self.throw_sound.set_volume(configuration.get_whole_sound_volume())
+        self.throw_sound.set_volume(int(configuration.get_effect_sound_volume()) / 100)
+        self.current_effect_volume = configuration.get_effect_sound_volume()
+
 
     def handle_events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -64,14 +66,19 @@ class Cards(pygame.sprite.Sprite):
                 pygame.time.set_timer(pygame.USEREVENT + 100, 100, 10)
                 from config import configuration
                 if configuration.is_sound_on():
-                    self.throw_sound.play(1)
+                    self.throw_sound.play()
             else:
                 from config import configuration
                 if configuration.is_sound_on():
-                    self.wrong_sound.play(1)
+                    self.wrong_sound.play()
                 # (because it is not your way)
 
     def update(self, *args: Any, **kwargs: Any):
+        from config import configuration
+        if self.current_effect_volume != configuration.get_effect_sound_volume():
+            self.wrong_sound.set_volume(int(configuration.get_effect_sound_volume()) / 100)
+            self.current_effect_volume = configuration.get_effect_sound_volume()
+
         deck = self.networking.current_game.users[self.user_id].deck
         self.image.fill((0, 0, 0, 0))
         try:
@@ -241,6 +248,7 @@ class PlayingScene(Scene):
         self.initialize_elements()
         self.last_user = self.networking.user
         self.draw_my_player()
+
 
 
     def draw_my_player(self):

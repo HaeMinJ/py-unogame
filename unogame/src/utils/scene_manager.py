@@ -31,6 +31,7 @@ class SceneManager:
         self.overlay_activate = False
         from config import configuration
         self.current_sound_volume = configuration.get_whole_sound_volume()
+        self.current_background_volume = configuration.get_background_sound_volume()
         self.current_sound_on = configuration.is_sound_on()
 
         self.sounds = {
@@ -71,8 +72,12 @@ class SceneManager:
             else:
                 self.current_sound.stop()
         if self.current_sound_volume != configuration.get_whole_sound_volume():
-            self.current_sound.set_volume(configuration.get_whole_sound_volume())
+            self.current_sound.set_volume(int(configuration.get_whole_sound_volume()) / 100)
             self.current_sound_volume = configuration.get_whole_sound_volume()
+
+        if self.current_background_volume != configuration.get_background_sound_volume():
+            self.current_sound.set_volume(int(configuration.get_background_sound_volume()) / 100)
+            self.current_background_volume = configuration.get_background_sound_volume()
 
         if self.current_scene.state.scene_changed:
             self.current_scene.state.scene_changed = False
