@@ -290,8 +290,8 @@ class UnoButton(pygame.sprite.Sprite):
 
 class PlayingScene(Scene):
 
-    def __init__(self, screen, gui_manager, params=None):  # , image_loader: ImageLoader):
-        super().__init__(screen, gui_manager, params)  # , image_loader)
+    def __init__(self, screen, gui_manager, params=None, server=None):  # , image_loader: ImageLoader):
+        super().__init__(screen, gui_manager, params, server)  # , image_loader)
         self.state = PlayingState()
         self.timer_event = pygame.USEREVENT + 1
         self.turn_time = 30

@@ -4,6 +4,7 @@ import socket
 import threading
 from typing import Callable, NoReturn
 
+from classes.auth.user import User
 from classes.cards.card import Card
 from classes.cards.wild_cards import WildCard, WildChangeColorCard, WildGetFourCard
 from classes.decks.game_deck import GameDeck
@@ -98,6 +99,10 @@ class Server:
                     password = loaded_data['password']
                     if password == self.password:
                         answer = "allow"
+                        user = User(len(self.current_game.users), "Player"+str(len(self.current_game.users)))
+                        user.deck.init_random()
+                        user.address = address
+                        self.current_game.append_user(user)
                     else:
                         answer = "deny"
                 case "fetch":
