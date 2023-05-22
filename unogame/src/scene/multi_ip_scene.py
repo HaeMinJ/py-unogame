@@ -15,8 +15,8 @@ class MultiIPScene(Scene):
     def initialize_elements(self):
         self.create_below_buttons()
 
-    def __init__(self, screen, gui_manager, params=None):
-        super().__init__(screen, gui_manager, params)
+    def __init__(self, screen, gui_manager, params=None, server=None):
+        super().__init__(screen, gui_manager, params, server)
         self.state = MultiIPState()
 
         self.lobby_image = load_image("lobby_img/lobby_bg.png")

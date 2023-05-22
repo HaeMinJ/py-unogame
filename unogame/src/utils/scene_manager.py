@@ -1,3 +1,5 @@
+import threading
+
 import pygame
 
 from classes.auth.ai_user import AIUser
@@ -16,6 +18,7 @@ from utils import scene_name, overlay_name
 from scene import MenuScene,LandingScene,PlayingScene,ConfigurationOverlayScene, StoryMapScene
 from utils.resource_path import resource_path
 
+from multiplay.server import Server
 
 class SceneManager:
     _instance = None
@@ -24,6 +27,7 @@ class SceneManager:
         # if SceneManager._instance is not None:
         #     raise Exception("SceneManager should be a singleton class.")
         # SceneManager._instance = self
+        self.server = None
 
         self.screen = screen
         self.gui_manager = gui_manager
@@ -60,7 +64,8 @@ class SceneManager:
         self.current_sound.play()
         params = [User(0, "Me"), AIUser(1, "Computer1", is_ai=True), AIUser(2, "Computer2", is_ai=True),
                        AIUser(3, "Computer3", is_ai=True)]
-        self.current_scene = self.scenes[scene_name.MAIN_MENU](screen, gui_manager,params)
+
+        self.current_scene = self.scenes[scene_name.MAIN_MENU](screen, gui_manager,params, self.server)
         self.current_overlay = self.overlay_scenes[overlay_name.CONFIGURATION](screen, overlay_manager)
 
     def update(self):
@@ -81,7 +86,15 @@ class SceneManager:
 
         if self.current_scene.state.scene_changed:
             self.current_scene.state.scene_changed = False
-            self.current_scene = self.scenes[self.current_scene.state.next_scene_name](self.screen, self.gui_manager, self.current_scene.state.next_params)
+            if self.current_scene.state.next_scene_name == scene_name.MULTI_ROBBY_SCENE:
+                self.create_server(self.current_scene.state.next_params)
+                self.current_scene = self.scenes[self.current_scene.state.next_scene_name](self.screen,
+                                                                                           self.gui_manager,
+                                                                                           self.current_scene.state.next_params,
+                                                                                           self.server)
+            else:
+                self.current_scene = self.scenes[self.current_scene.state.next_scene_name](self.screen, self.gui_manager, self.current_scene.state.next_params)
+
             print("Scene moved(Current Scene) : ", self.current_scene)
 
         if self.current_scene.state.overlay_active_changed:
@@ -105,6 +118,11 @@ class SceneManager:
         else:
             self.current_overlay.process_events(event)
             self.overlay_manager.process_events(event)
+
+    def create_server(self,password):
+        self.server = Server(address='127.0.0.1', password=password)
+        thread = threading.Thread(target=self.server.mainloop)
+        thread.start()
 
     def draw(self):
         self.current_scene.draw()

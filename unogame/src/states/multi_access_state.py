@@ -1,5 +1,6 @@
 import pygame
 
+from multiplay.multi_networking import MultiNetworking
 from states import GameState
 from utils import scene_name
 
@@ -14,4 +15,6 @@ class MultiAccessState(GameState):
         if event.type == self.timer_event:
             self.move_scene(scene_name.MAIN_MENU)
 
-
+    def connect_server(self, SERVER_IP, PASSWORD):
+        networking = MultiNetworking(SERVER_IP)
+        networking.access_lobby(PASSWORD)

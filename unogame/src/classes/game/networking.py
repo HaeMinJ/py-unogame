@@ -79,7 +79,7 @@ class Networking:
         if result:
             self.current_moving_card = card_object
             if len(current_user.deck.cards) == 2 and not current_user.deck.uno_said:
-                current_user.deck.random_cards(2)
+                current_user.deck.random_cards(1)
             card_object.move(self.current_game)
             if type(card) == int:
                 print("POP card in", current_user)
@@ -101,7 +101,7 @@ class Networking:
 
     def get_card(self) -> bool:
         data = {'type': 'get_card'}
-        self.user.deck.random_cards()
+        self.get_user_from_game().deck.random_cards()
         self.current_game.next_player()
         return True
         # self.sock.sendall(pickle.dumps(data))

@@ -14,7 +14,7 @@ class PlayerDeck:
         self.cards.append(card)
 
     def init_random(self):
-        self.cards = random_cards(amount=7)
+        self.cards = random_cards(amount=2)
 
     def pop(self, index: int) -> Card:
         return self.cards.pop(index)

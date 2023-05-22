@@ -15,8 +15,8 @@ class MultiPasswordScene(Scene):
     def initialize_elements(self):
         self.create_below_buttons()
 
-    def __init__(self, screen, gui_manager, params=None):
-        super().__init__(screen, gui_manager, params)
+    def __init__(self, screen, gui_manager, params=None, server=None):
+        super().__init__(screen, gui_manager, params, server)
         self.state = MultiPasswordState()
 
         self.lobby_image = load_image("lobby_img/lobby_bg.png")
@@ -70,6 +70,7 @@ class MultiPasswordScene(Scene):
                 self.password = self.text_input_password.get_text()
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                self.password = self.text_input_password.get_text()
                 if event.ui_element == self.move_scene_buttons[0]:
                     self.state.move_scene(scene_name.MULTI_ROLE_SCENE)
                 if event.ui_element == self.move_scene_buttons[1]:

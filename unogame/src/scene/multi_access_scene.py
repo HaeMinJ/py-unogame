@@ -16,8 +16,8 @@ class MultiAccessScene(Scene):
         self.create_below_buttons()
         self.create_access_buttons()
 
-    def __init__(self, screen, gui_manager, params=None):
-        super().__init__(screen, gui_manager, params)
+    def __init__(self, screen, gui_manager, params=None, server=None):
+        super().__init__(screen, gui_manager, params, server)
         self.state = MultiAccessState()
 
         self.lobby_image = load_image("lobby_img/lobby_bg.png")
@@ -103,6 +103,7 @@ class MultiAccessScene(Scene):
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.focusable_buttons[2]:
+                    self.state.connect_server(self.input_ip,"asdf1234")
                     if self.input_ip == self.game_ip:
                         self.is_password_access = True
                     if self.is_password_access == True:
