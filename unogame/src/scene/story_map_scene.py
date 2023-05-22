@@ -15,8 +15,8 @@ class StoryMapScene(Scene):
         self.create_stage_buttons()
         self.create_play_btn()
 
-    def __init__(self, screen, gui_manager, params=None):
-        super().__init__(screen, gui_manager)
+    def __init__(self, screen, gui_manager, params=None, server=None):
+        super().__init__(screen, gui_manager, params, server)
         self.state = StoryMapState()
         self.current_focused_button = -1
 

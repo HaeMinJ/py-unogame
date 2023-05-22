@@ -7,7 +7,7 @@ from utils import scene_name
 class MultiRobbyState(GameState):
     def __init__(self):
         super().__init__()
-
+        self.server
 
 
 
