@@ -137,11 +137,11 @@ class MenuScene(Scene):
         if event.type == pygame.KEYDOWN:
             key_event = event.key
             action = get_action(key_event)
+
             if action == action_name.MOVE_UP or action == action_name.MOVE_LEFT:
                 self.current_focused_button = (self.current_focused_button - 1) % len(self.focusable_buttons)
                 self.gui_manager.set_focus_set(self.focusable_buttons[self.current_focused_button])
                 print(self.gui_manager.get_focus_set(), self.current_focused_button)
-
             if action == action_name.MOVE_DOWN or action == action_name.MOVE_RIGHT:
                 self.current_focused_button = (self.current_focused_button + 1) % len(self.focusable_buttons)
                 self.gui_manager.set_focus_set(self.focusable_buttons[self.current_focused_button])

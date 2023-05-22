@@ -32,9 +32,14 @@ class ConfigurationState(GameState):
         configuration.set_effect_sound_volume(effect)
         self.save_to_file()
 
+    def set_up_key(self, up:int, down:int, left:int, right:int):
+        configuration.set_keyboard_map(up, down, left, right)
+        self.save_to_file()
+
     def save_to_file(self):
         configuration.save_config_to_file()
 
     def load_from_file(self):
         configuration.load_config_from_file()
+
 
