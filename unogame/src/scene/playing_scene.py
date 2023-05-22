@@ -200,7 +200,6 @@ class PlayingScene(Scene):
     def __init__(self, screen, gui_manager, params=None):  # , image_loader: ImageLoader):
         super().__init__(screen, gui_manager, params)  # , image_loader)
         self.state = PlayingState()
-        self.throwable = True
         self.timer_event = pygame.USEREVENT + 1
         self.turn_time = 30
         self.TURN_TIME_EVENT_CODE = 99
@@ -373,18 +372,11 @@ class PlayingScene(Scene):
         if cur_user != self.last_user:
             self.turn_time = 30
         if cur_user.is_ai:
-            if self.throwable:
-                pygame.time.set_timer(self.timer_event + 1, 3000, 1)
-            self.throwable = False
-        if event.type == self.timer_event+1 and cur_user.is_ai:
-            can_throw = False
-            for card in range(len(self.networking.get_user_from_game().deck.cards)):
-                if self.networking.throw_card(cur_user.id, card):  # self.networking.get_user_from_game().deck.cards[0])
-                    can_throw = True
-                    break
-            if not can_throw:
-                self.networking.get_card()
-            self.throwable = True
+            if cur_user.throwable:
+                pygame.time.set_timer(self.timer_event + 5, 3000, 1)
+            cur_user.throwable = False
+        if event.type == self.timer_event+5 and cur_user.is_ai:
+            cur_user.do_action(networking=self.networking)
         if event.type == pygame.KEYDOWN:
             key_event = event.key
             action = get_action(key_event)

@@ -1,5 +1,6 @@
 import pygame
 
+from classes.auth.ai_user import AIUser
 from classes.auth.user import User
 from classes.game.networking import Networking
 from scene.lobby_scene import LobbyScene
@@ -56,8 +57,8 @@ class SceneManager:
         }
         self.current_sound = self.sounds["LOBBY"]
         self.current_sound.play()
-        params = [User(0, "Me"), User(1, "Computer1", is_ai=True), User(2, "Computer2", is_ai=True),
-                       User(3, "Computer3", is_ai=True)]
+        params = [User(0, "Me"), AIUser(1, "Computer1", is_ai=True), AIUser(2, "Computer2", is_ai=True),
+                       AIUser(3, "Computer3", is_ai=True)]
         self.current_scene = self.scenes[scene_name.PLAYING_GAME](screen, gui_manager,params)
         self.current_overlay = self.overlay_scenes[overlay_name.CONFIGURATION](screen, overlay_manager)
 
