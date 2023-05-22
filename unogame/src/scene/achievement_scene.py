@@ -119,8 +119,8 @@ class AchievementOverlayScene(OverlayScene):
         # self.multi_victory = pygame.transform.smoothscale(self.multi_victory, vp(688, 41))
         #
         #
-        # self.panel.drawable_shape.states['normal'].surface.blit(self.overlay_bg_image, (0, 0))
-        # self.panel.drawable_shape.active_state.has_fresh_surface = True
+        self.panel.drawable_shape.states['normal'].surface.blit(self.overlay_bg_image, (0, 0))
+        self.panel.drawable_shape.active_state.has_fresh_surface = True
         #
         # self.date_achieve_bg = load_image("date_achieve_bg.png")
         # self.clear_achieve_bg = load_image("clear_achieve_bg.png")
@@ -145,10 +145,12 @@ class AchievementOverlayScene(OverlayScene):
         self.close_button.drawable_shape.active_state.has_fresh_surface = True
 
 
-def process_events(self, event):
-        super().process_events(event)
-        if event.type == pygame.KEYDOWN:
-            key_event = event.key
-            action = get_action(key_event)
-            if action == action_name.PAUSE:
-                self.set_inactive()
+    def process_events(self, event):
+            super().process_events(event)
+            if event.type == pygame.KEYDOWN:
+                key_event = event.key
+                action = get_action(key_event)
+                if action == action_name.PAUSE:
+                    self.set_inactive()
+    def draw(self):
+        super().draw()

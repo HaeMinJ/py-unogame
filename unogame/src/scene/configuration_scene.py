@@ -273,4 +273,3 @@ class ConfigurationOverlayScene(OverlayScene):
 
     def draw(self):
         super().draw()
-
