@@ -31,8 +31,6 @@ overlay_manager.set_visual_debug_mode(True)
 # Set up clock for controlling the frame rate
 clock = pygame.time.Clock()
 
-#image_loader = ImageLoader()
-# Create a SceneManager instance
 scene_manager = SceneManager(screen, gui_manager, overlay_manager)
 
 while True:
