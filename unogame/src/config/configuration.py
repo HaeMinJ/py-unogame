@@ -11,15 +11,28 @@ import unittest
 BLIND_MODE = blind_mode_name.DEFAULT
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
-CURRENT_STAGE = 0
-SOUND_VOLUME = 30
+CURRENT_STAGE = 3
+WHOLE_SOUND_VOLUME = 30
+BACKGROUND_SOUND_VOLUME = 30
+EFFECT_SOUND_VOLUME = 30
 SOUND_ON = True
 
-def set_sound_volume(v:int):
-    global SOUND_VOLUME
-    SOUND_VOLUME = v
-def get_sound_volume():
-    return SOUND_VOLUME
+def set_whole_sound_volume(v:int):
+    global WHOLE_SOUND_VOLUME
+    WHOLE_SOUND_VOLUME = v
+def set_background_sound_volume(v:int):
+    global BACKGROUND_SOUND_VOLUME
+    BACKGROUND_SOUND_VOLUME = v
+def set_effect_sound_volume(v:int):
+    global EFFECT_SOUND_VOLUME
+    EFFECT_SOUND_VOLUME = v
+
+def get_whole_sound_volume():
+    return WHOLE_SOUND_VOLUME
+def get_background_sound_volume():
+    return BACKGROUND_SOUND_VOLUME
+def get_effect_sound_volume():
+    return EFFECT_SOUND_VOLUME
 def set_sound_on():
     global SOUND_ON
     SOUND_ON = True
@@ -78,7 +91,9 @@ def save_config_to_file():
         "SCREEN_WIDTH" : SCREEN_WIDTH,
         "keybinding" : keybindings,
         "CURRENT_STAGE": CURRENT_STAGE,
-        "SOUND_VOLUME":SOUND_VOLUME,
+        "WHOLE_SOUND_VOLUME" : WHOLE_SOUND_VOLUME,
+        "BACKGROUND_SOUND_VOLUME" : BACKGROUND_SOUND_VOLUME,
+        "EFFECT_SOUND_VOLUME" : EFFECT_SOUND_VOLUME,
         "SOUND_ON":SOUND_ON
     }
     with open("config.json", "w") as f:
@@ -94,7 +109,9 @@ async def load_config_from_file():
         "SCREEN_WIDTH": SCREEN_WIDTH,
         "keybinding": KEYBOARD_MAP,
         "CURRENT_STAGE": CURRENT_STAGE,
-        "SOUND_VOLUME": SOUND_VOLUME,
+        "WHOLE_SOUND_VOLUME": WHOLE_SOUND_VOLUME,
+        "BACKGROUND_SOUND_VOLUME": BACKGROUND_SOUND_VOLUME,
+        "EFFECT_SOUND_VOLUME": EFFECT_SOUND_VOLUME,
         "SOUND_ON": SOUND_ON
     }
     try:
@@ -119,7 +136,9 @@ def convert_to_current_config(configurations):
     global SCREEN_WIDTH
     global SCREEN_HEIGHT
     global CURRENT_STAGE
-    global SOUND_VOLUME
+    global WHOLE_SOUND_VOLUME
+    global BACKGROUND_SOUND_VOLUME
+    global EFFECT_SOUND_VOLUME
     global SOUND_ON
     try:
         BLIND_MODE=configurations["BLIND_MODE"]
@@ -127,7 +146,10 @@ def convert_to_current_config(configurations):
         SCREEN_HEIGHT=configurations["SCREEN_HEIGHT"]
         CURRENT_STAGE=configurations["CURRENT_STAGE"]
         SOUND_ON=configurations["SOUND_ON"]
-        SOUND_VOLUME=configurations["SOUND_VOLUME"]
+        WHOLE_SOUND_VOLUME = configurations["WHOLE_SOUND_VOLUME"]
+        BACKGROUND_SOUND_VOLUME = configurations["BACKGROUND_SOUND_VOLUME"]
+        EFFECT_SOUND_VOLUME = configurations["EFFECT_SOUND_VOLUME"]
+
     except(KeyError):
         print("No Initial config valid.")
 

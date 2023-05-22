@@ -329,8 +329,9 @@ class PlayingScene(Scene):
         #    manager=self.gui_manager,
         #    object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_uno")
         # )
+
         btn_pause = FocusableUIButton(
-            relative_rect=pygame.Rect((vw(23), get_screen_height() - 143), vp(91, 129)),
+            relative_rect=pygame.Rect(vp(vw(23), get_screen_height() - 143), vp(91, 129)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_pause")
@@ -347,13 +348,13 @@ class PlayingScene(Scene):
 
     def create_side_buttons(self):
         btn_view_cards = FocusableUIButton(
-            relative_rect=pygame.Rect((get_screen_width() - 200, get_screen_height() / 2 - 140), vp(199, 107)),
+            relative_rect=pygame.Rect(vp(get_screen_width() - 200, get_screen_height() / 2 - 140), vp(199, 107)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_view_cards")
         )
         btn_turn_off = FocusableUIButton(
-            relative_rect=pygame.Rect((get_screen_width() - 180, get_screen_height() / 2 - 20), vp(179, 110)),
+            relative_rect=pygame.Rect(vp(get_screen_width() - 180, get_screen_height() / 2 - 20), vp(179, 110)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_turn_off")
@@ -405,6 +406,7 @@ class PlayingScene(Scene):
             self._uno_button.add(self._miscellaneous_group)
         else:
             self._uno_button.remove(self._miscellaneous_group)
+
 
         self._miscellaneous_group.draw(self.screen)
         self._miscellaneous_group.update()
