@@ -10,8 +10,8 @@ from states.result_state import ResultState
 from utils.image_utility import load_image
 
 class ResultScene(Scene):
-    def __init__(self, screen, gui_manager, params=None):
-        super().__init__(screen, gui_manager, params)
+    def __init__(self, screen, gui_manager, params=None, server=None):
+        super().__init__(screen, gui_manager, params, server)
         self.state = ResultState()
         self.logo_image = load_image("logo.png")
 

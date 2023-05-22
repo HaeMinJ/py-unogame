@@ -1,6 +1,7 @@
 import pygame
 import pygame_gui
 from pygame_gui.core import ObjectID
+import socket
 
 from config.configuration import get_screen_width, get_screen_height, vw, vh, vp, KEYBOARD_MAP, get_action
 
@@ -16,9 +17,9 @@ class MultiRobbyScene(Scene):
     def initialize_elements(self):
         self.create_below_buttons()
 
-    def __init__(self, screen, gui_manager, params=None):
-        super().__init__(screen, gui_manager, params)
-        self.state = MultiRobbyState()
+    def __init__(self, screen, gui_manager, params=None, server=None):
+        super().__init__(screen, gui_manager, params, server)
+        self.params = params
 
         self.lobby_image = load_image("lobby_img/lobby_bg.png")
         self.lobby_image = pygame.transform.scale(self.lobby_image, (get_screen_width(), get_screen_height()))
@@ -34,7 +35,10 @@ class MultiRobbyScene(Scene):
         self.other_player_bg = load_image("lobby_img/other_player_bg.png")
         self.other_player_bg = pygame.transform.scale(self.other_player_bg, vp(512, 90))
 
-        self.my_ip_address = "123.412.3523"
+        hostname = socket.gethostname()
+        ## getting the IP address using socket.gethostbyname() method
+        ip_address = socket.gethostbyname(hostname)
+        self.my_ip_address = ip_address
 
         self.move_scene_buttons = []
 
@@ -44,6 +48,7 @@ class MultiRobbyScene(Scene):
         self.other_players = [User(1, "player1"), User(2, "player2")]
 
         self.initialize_elements()
+        self.state = MultiRobbyState()
 
     def create_below_buttons(self):
         btn_left = FocusableUIButton(
