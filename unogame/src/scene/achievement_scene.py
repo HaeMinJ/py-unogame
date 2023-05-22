@@ -30,49 +30,49 @@ class AchievementOverlayScene(OverlayScene):
             object_id=ObjectID(object_id="overlay_panel", class_id="@overlay_panels")
         )
         self.war_victory_panel = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(250)) / 2, vw(886), vh(68)),
+            relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(250)) / 2, vw(688), vh(41)),
             manager=self.overlay_manager,
             starting_layer_height=2,
             object_id=ObjectID(object_id="overlay_panel", class_id="@overlay_panels")
         )
         self.area_victory_panel = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(100)) / 2, vw(886), vh(155)),
+            relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(100)) / 2, vw(688), vh(41)),
             manager=self.overlay_manager,
             starting_layer_height=2,
             object_id=ObjectID(object_id="overlay_panel", class_id="@overlay_panels")
         )
         self.turn_victory1_panel = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(100)) / 2, vw(886), vh(155)),
+            relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(100)) / 2, vw(688), vh(41)),
             manager=self.overlay_manager,
             starting_layer_height=2,
             object_id=ObjectID(object_id="overlay_panel", class_id="@overlay_panels")
         )
         self.technic_ban_panel = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(100)) / 2, vw(886), vh(155)),
+            relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(100)) / 2, vw(688), vh(41)),
             manager=self.overlay_manager,
             starting_layer_height=2,
             object_id=ObjectID(object_id="overlay_panel", class_id="@overlay_panels")
         )
         self.UNO_panel = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(100)) / 2, vw(886), vh(155)),
+            relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(100)) / 2, vw(688), vh(41)),
             manager=self.overlay_manager,
             starting_layer_height=2,
             object_id=ObjectID(object_id="overlay_panel", class_id="@overlay_panels")
         )
         self.winning_streak_panel = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(100)) / 2, vw(886), vh(155)),
+            relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(100)) / 2, vw(688), vh(41)),
             manager=self.overlay_manager,
             starting_layer_height=2,
             object_id=ObjectID(object_id="overlay_panel", class_id="@overlay_panels")
         )
         self.story_check_panel = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(100)) / 2, vw(886), vh(155)),
+            relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(100)) / 2, vw(688), vh(41)),
             manager=self.overlay_manager,
             starting_layer_height=2,
             object_id=ObjectID(object_id="overlay_panel", class_id="@overlay_panels")
         )
         self.multi_victory_panel = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(100)) / 2, vw(886), vh(155)),
+            relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(100)) / 2, vw(688), vh(41)),
             manager=self.overlay_manager,
             starting_layer_height=2,
             object_id=ObjectID(object_id="overlay_panel", class_id="@overlay_panels")
@@ -92,36 +92,53 @@ class AchievementOverlayScene(OverlayScene):
 
         self.overlay_bg_image = load_image("achieve_overlay_bg.png")
         self.overlay_bg_image = pygame.transform.smoothscale(self.overlay_bg_image, vp(984, 633))
-
         self.panel.drawable_shape.states['normal'].surface.blit(self.overlay_bg_image, (0, 0))
         self.panel.drawable_shape.active_state.has_fresh_surface = True
 
-        self.war_victory_bg = load_image("war_victory_bg.png")
-        self.war_victory_bg = pygame.transform.smoothscale(self.war_victory_bg, vp(688, 41))
-        self.area_victory_bg = load_image("area_victory_bg.png")
-        self.area_victory_bg = pygame.transform.smoothscale(self.area_victory_bg, vp(688, 41))
-        self.war_victory_panel.drawable_shape.states['normal'].surface.blit(self.war_victory_bg, (0, 0))
-        self.area_victory_panel.drawable_shape.states['normal'].surface.blit(self.area_victory_bg, (0, 0))
-
-
-
-        # self.turn_victory1 = load_image("turn_victory1.png")
-        # self.turn_victory1 = pygame.transform.smoothscale(self.war_victory, vp(688, 41))
-        # self.technic_ban = load_image("technic_ban.png")
-        # self.technic_ban = pygame.transform.smoothscale(self.technic_ban, vp(688, 41))
-        # self.UNO = load_image("UNO.png")
-        # self.UNO = pygame.transform.smoothscale(self.UNO, vp(688, 41))
-        # self.winning_streak = load_image("winning_streak.png")
-        # self.winning_streak = pygame.transform.smoothscale(self.winning_streak, vp(688, 41))
-        # self.story_check = load_image("story_check.png")
-        # self.story_check = pygame.transform.smoothscale(self.story_check, vp(688, 41))
-        # self.multi_victory = load_image("multi_victory.png")
-        # self.multi_victory = pygame.transform.smoothscale(self.multi_victory, vp(688, 41))
-        #
-        #
-        self.panel.drawable_shape.states['normal'].surface.blit(self.overlay_bg_image, (0, 0))
+        self.war_victory_bg_image = load_image("war_victory_bg.png")
+        self.war_victory_bg_image = pygame.transform.smoothscale(self.war_victory_bg_image, vp(688, 41))
+        self.panel.drawable_shape.states['normal'].surface.blit(self.war_victory_bg_image, (0, 0))
         self.panel.drawable_shape.active_state.has_fresh_surface = True
-        #
+
+        self.area_victory_bg_image = load_image("area_victory_bg.png")
+        self.area_victory_bg_image = pygame.transform.smoothscale(self.area_victory_bg_image, vp(688, 41))
+        self.panel.drawable_shape.states['normal'].surface.blit(self.area_victory_bg_image, (0, 0))
+        self.panel.drawable_shape.active_state.has_fresh_surface = True
+
+        self.turn_victory1 = load_image("turn_victory1.png")
+        self.turn_victory1 = pygame.transform.smoothscale(self.turn_victory1, vp(688, 41))
+        self.panel.drawable_shape.states['normal'].surface.blit(self.turn_victory1, (0, 0))
+        self.panel.drawable_shape.active_state.has_fresh_surface = True
+
+        self.technic_ban = load_image("technic_ban.png")
+        self.technic_ban = pygame.transform.smoothscale(self.technic_ban, vp(688, 41))
+        self.panel.drawable_shape.states['normal'].surface.blit(self.technic_ban, (0, 0))
+        self.panel.drawable_shape.active_state.has_fresh_surface = True
+
+        self.UNO = load_image("UNO.png")
+        self.UNO = pygame.transform.smoothscale(self.UNO, vp(688, 41))
+        self.panel.drawable_shape.states['normal'].surface.blit(self.UNO, (0, 0))
+        self.panel.drawable_shape.active_state.has_fresh_surface = True
+
+        self.winning_streak = load_image("winning_streak.png")
+        self.winning_streak = pygame.transform.smoothscale(self.winning_streak, vp(688, 41))
+        self.panel.drawable_shape.states['normal'].surface.blit(self.winning_streak, (0, 0))
+        self.panel.drawable_shape.active_state.has_fresh_surface = True
+
+        self.story_check = load_image("story_check.png")
+        self.story_check = pygame.transform.smoothscale(self.story_check, vp(688, 41))
+        self.panel.drawable_shape.states['normal'].surface.blit(self.story_check, (0, 0))
+        self.panel.drawable_shape.active_state.has_fresh_surface = True
+
+        self.multi_victory = load_image("multi_victory.png")
+        self.multi_victory = pygame.transform.smoothscale(self.multi_victory, vp(688, 41))
+        self.panel.drawable_shape.states['normal'].surface.blit(self.multi_victory, (0, 0))
+        self.panel.drawable_shape.active_state.has_fresh_surface = True
+
+
+
+
+
         # self.date_achieve_bg = load_image("date_achieve_bg.png")
         # self.clear_achieve_bg = load_image("clear_achieve_bg.png")
         # self.date_achieve_bg = pygame.transform.smoothscale(self.date_achieve_bg, vp(84, 40))
