@@ -20,6 +20,7 @@ class MultiRobbyScene(Scene):
     def __init__(self, screen, gui_manager, params=None, server=None):
         super().__init__(screen, gui_manager, params, server)
         self.params = params
+        self.server.current_game.append_user(User(0,"Me"))
 
         self.lobby_image = load_image("lobby_img/lobby_bg.png")
         self.lobby_image = pygame.transform.scale(self.lobby_image, (get_screen_width(), get_screen_height()))
@@ -45,7 +46,7 @@ class MultiRobbyScene(Scene):
         self.player_bg_width = vw(512)
         self.player_bg_height = vh(90)
         self.player_bg_margin = vh(13)
-        self.other_players = [User(1, "player1"), User(2, "player2")]
+        self.other_players = self.server.current_game.users
 
         self.initialize_elements()
         self.state = MultiRobbyState()
@@ -72,6 +73,9 @@ class MultiRobbyScene(Scene):
         self.move_scene_buttons.extend([btn_left, btn_right])
 
     def process_events(self, event):
+        if self.server.user_list_changed:
+            self.other_players = self.server.current_game.users
+            self.server.user_list_changed = False
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.move_scene_buttons[0]:

@@ -25,6 +25,7 @@ class Server:
     def __init__(self, password, address: str = socket.gethostname(), port: int = 5499):
         self.current_game = Game([], GameDeck())
         self.current_game.deck.init_random()
+        self.user_list_changed = False
         self.password = password
         self.threads = []
         # порт в моём случае выбран абсолютно случайно
@@ -84,8 +85,9 @@ class Server:
             if not data:
                 logging.info(f"Client {address} closed connection, so we are closing it too")
                 try:
-                    self.current_game.users.remove(
-                        [user for user in self.current_game.users if user.address == address][0])
+                    pass
+                    # self.current_game.users.remove(
+                    #     [user for user in self.current_game.users if user.address == address][0])
                 except IndexError:
                     logging.warning(f"User with address {address} didnt logon, so we cant remove it")
                 sock.close()
@@ -103,6 +105,7 @@ class Server:
                         user.deck.init_random()
                         user.address = address
                         self.current_game.append_user(user)
+                        self.user_list_changed = True
                     else:
                         answer = "deny"
                 case "fetch":
