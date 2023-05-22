@@ -288,19 +288,19 @@ class ConfigurationOverlayScene(OverlayScene):
         )
         self.blind_mode_protanopia = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect(vp(364, 339), vp(118, 28)),
-            text="Protanopia",
+            text="protanopia",
             container=self.panel,
             manager=self.overlay_manager
         )
         self.blind_mode_tritanopia = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect(vp(552, 339), vp(109, 28)),
-            text="Tritanopia",
+            text="tritanopia",
             container=self.panel,
             manager=self.overlay_manager
         )
         self.blind_mode_deuteranopia = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect(vp(734, 339), vp(147, 28)),
-            text="Deuteranopia",
+            text="deuteranopia",
             container=self.panel,
             manager=self.overlay_manager
         )

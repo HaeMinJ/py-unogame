@@ -17,6 +17,9 @@ BACKGROUND_SOUND_VOLUME = 30
 EFFECT_SOUND_VOLUME = 30
 SOUND_ON = True
 
+
+def get_color_mode():
+    return BLIND_MODE
 def set_whole_sound_volume(v:int):
     global WHOLE_SOUND_VOLUME
     WHOLE_SOUND_VOLUME = v
@@ -166,7 +169,6 @@ def convert_to_current_config(configurations):
 
     except(KeyError):
         print("No Initial config valid.")
-
 
 def convert_keybinding(keybindings):
     global KEYBOARD_MAP
