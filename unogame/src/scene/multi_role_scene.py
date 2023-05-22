@@ -11,8 +11,8 @@ from config import get_screen_width, get_screen_height, vw, vh
 from utils.image_utility import load_image
 
 class MultiRoleScene(Scene):
-    def __init__(self, screen, gui_manager, params=None):
-        super().__init__(screen, gui_manager, params)
+    def __init__(self, screen, gui_manager, params=None, server=None):
+        super().__init__(screen, gui_manager, params, server)
         self.state = MultiRoleState()
 
         self.lobby_image = load_image("lobby_img/lobby_bg.png")

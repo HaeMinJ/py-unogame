@@ -17,8 +17,8 @@ class LobbyScene(Scene):
         self.create_below_buttons()
         self.create_set_player_buttons()
 
-    def __init__(self, screen, gui_manager, params=None):
-        super().__init__(screen, gui_manager, params)
+    def __init__(self, screen, gui_manager, params=None, server=None):
+        super().__init__(screen, gui_manager, params, server)
         self.state = LobbyState()
         self.current_focused_button = -1
 

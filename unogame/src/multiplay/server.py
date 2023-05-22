@@ -21,9 +21,10 @@ class Server:
     # учитывая, мою базу по сетям, я бы мог и написать эту историю поверх UDP,
     # сконструировать красивый протокол, сделать сервер не блокирующим (т.е. асинхронным)
     # но времени мало + мне лень, а также в лицее нам про асинхронность почему-то не рассказывают)
-    def __init__(self, address: str = socket.gethostname(), port: int = 5499):
+    def __init__(self, password, address: str = socket.gethostname(), port: int = 5499):
         self.current_game = Game([], GameDeck())
         self.current_game.deck.init_random()
+        self.password = password
         self.threads = []
         # порт в моём случае выбран абсолютно случайно
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -93,6 +94,12 @@ class Server:
             answer = None
             # python 3.10 goes brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
             match loaded_data['type']:
+                case "access":
+                    password = loaded_data['password']
+                    if password == self.password:
+                        answer = "allow"
+                    else:
+                        answer = "deny"
                 case "fetch":
                     answer = self.__fetch()
                 case "update":
@@ -118,12 +125,12 @@ class Server:
             client_thread = self._client_thread
         while True:
             client_socket, client_address = self.sock.accept()
-            logging.info(f"New client {client_address}, starting client thread")
+            #logging.info(f"New client {client_address}, starting client thread")
             thread = threading.Thread(target=client_thread, args=(client_socket, client_address))
             self.threads.append(thread)
             thread.start()
-            if self.current_game.is_started:
-                self.current_game.deck.cards[0].move(self.current_game)
+            #if self.current_game.is_started:
+            #    self.current_game.deck.cards[0].move(self.current_game)
 
     def __del__(self):
         self.sock.close()

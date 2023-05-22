@@ -8,7 +8,7 @@ from classes.decks.game_deck import GameDeck
 from classes.game.game import Game
 
 
-class Networking:
+class MultiNetworking:
     """
     Networking-singleton для авторизации и обмена состояниями игры
     """
@@ -22,23 +22,18 @@ class Networking:
     def _connect(self, address, port):
         self.sock.connect((address, port))
 
+    def access_lobby(self, password):
+        data = {'type': 'access', 'password': password}
+        self.sock.sendall(pickle.dumps(data))
+        answer = pickle.loads(self.sock.recv(2048))
+        print(answer)
+
     def login(self, username, password) -> User:
-        data = {'type': 'login', 'username': username, 'password': password}
+        data = {'type': 'access', 'username': username, 'password': password}
         self.sock.sendall(pickle.dumps(data))
         answer = user, game = pickle.loads(self.sock.recv(2048))
         if type(answer) == dict:
             raise WrongCredentials(answer['message'])
-        else:
-            self.authorized_user = user
-            self.current_game = game
-            return answer
-
-    def register(self, username, password) -> User:
-        data = {'type': 'register', 'username': username, 'password': password}
-        self.sock.sendall(pickle.dumps(data))
-        answer = user, game = pickle.loads(self.sock.recv(2048))
-        if type(answer) == dict:
-            raise ValueError(answer['message'])
         else:
             self.authorized_user = user
             self.current_game = game

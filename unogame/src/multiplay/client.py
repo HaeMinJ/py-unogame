@@ -3,7 +3,7 @@ import sys
 import pygame
 import pygame_gui
 
-from networking import Networking
+from multi_networking import Networking
 
 FETCH_RATE = 30
 SERVER_IP = '127.0.0.1'

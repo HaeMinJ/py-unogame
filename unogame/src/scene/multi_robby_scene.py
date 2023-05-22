@@ -17,9 +17,8 @@ class MultiRobbyScene(Scene):
     def initialize_elements(self):
         self.create_below_buttons()
 
-    def __init__(self, screen, gui_manager, params=None):
-        super().__init__(screen, gui_manager, params)
-        self.state = MultiRobbyState()
+    def __init__(self, screen, gui_manager, params=None, server=None):
+        super().__init__(screen, gui_manager, params, server)
         self.params = params
 
         self.lobby_image = load_image("lobby_img/lobby_bg.png")
@@ -49,6 +48,7 @@ class MultiRobbyScene(Scene):
         self.other_players = [User(1, "player1"), User(2, "player2")]
 
         self.initialize_elements()
+        self.state = MultiRobbyState()
 
     def create_below_buttons(self):
         btn_left = FocusableUIButton(
