@@ -442,7 +442,6 @@ class PlayingScene(Scene):
         self.screen.blit(text, text_turn_rect)
 
     def card_color(self, card_color):
-        print(card_color)
         pygame.draw.circle(self.screen, (card_color.value.r,card_color.value.g,card_color.value.b), [370, 380], 30)
 
     def draw(self):

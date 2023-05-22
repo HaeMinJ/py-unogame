@@ -46,10 +46,9 @@ class SceneManager:
         self.scenes = {
             scene_name.LANDING: LandingScene,
             scene_name.MAIN_MENU: MenuScene,
-            scene_name.PLAYING_GAME: PlayingScene,
             scene_name.LOBBY_SCENE: LobbyScene,
             scene_name.STORY_MAP_SCENE: StoryMapScene,
-            scene_name.PLAYING_SCENE: MainScreen,
+            scene_name.PLAYING_SCENE: PlayingScene,
             scene_name.RESULT_SCENE: ResultScene,
             scene_name.MULTI_ROLE_SCENE : MultiRoleScene,
             scene_name.MULTI_ACCESS_SCENE: MultiAccessScene,
@@ -65,7 +64,7 @@ class SceneManager:
         params = [User(0, "Me"), AIUser(1, "Computer1", is_ai=True), AIUser(2, "Computer2", is_ai=True),
                        AIUser(3, "Computer3", is_ai=True)]
 
-        self.current_scene = self.scenes[scene_name.MAIN_MENU](screen, gui_manager,params, self.server)
+        self.current_scene = self.scenes[scene_name.MAIN_MENU](screen, gui_manager, params, self.server)
         self.current_overlay = self.overlay_scenes[overlay_name.CONFIGURATION](screen, overlay_manager)
 
     def update(self):
