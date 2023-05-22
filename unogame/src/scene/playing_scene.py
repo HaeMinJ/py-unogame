@@ -2,20 +2,20 @@ from typing import Any
 
 import pygame
 from pygame import Surface
+from pygame.event import Event
 from pygame.sprite import AbstractGroup
 from pygame_gui.core import ObjectID
-from pygame_gui.elements import UIButton, UILabel
 
+from classes.cards.wild_cards import WildChangeColorCard, WildGetFourCard
+from classes.enums.colors import Colors
 from classes.game.networking import Networking
 from config.configuration import get_screen_width, get_screen_height, vw, vh, vp, KEYBOARD_MAP, get_action
 
-from assets import image_keys
-from assets.image_loader import ImageLoader
 from scene import Scene
 from scene.main_screen import EventGroup
 from states.playing_state import PlayingState
 from utils import action_name, overlay_name
-from utils.card_utility import card_image
+from utils.card_utility import card_image, random_cards
 from utils.resource_path import resource_path
 from widgets import FocusableUIButton
 from utils.image_utility import load_image
@@ -50,9 +50,9 @@ class Cards(pygame.sprite.Sprite):
         self.rotation = rotation
         self.wrong_sound = pygame.mixer.Sound(resource_path("assets/sound/wrong.mp3"))
         from config import configuration
-        self.wrong_sound.set_volume(configuration.get_sound_volume())
+        self.wrong_sound.set_volume(configuration.get_whole_sound_volume())
         self.throw_sound = pygame.mixer.Sound(resource_path("assets/sound/throw_card.mp3"))
-        self.throw_sound.set_volume(configuration.get_sound_volume())
+        self.throw_sound.set_volume(configuration.get_whole_sound_volume())
 
     def handle_events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -100,7 +100,6 @@ class Cards(pygame.sprite.Sprite):
             # this exception will happen ONLY ONCE, when somebody has 0 cards
             # i know, that is strange solution, but trust me
             # this is just prototype, hehehe
-            from pygame import Event
             pygame.event.post(Event(self.CARD_END))
 
 
@@ -116,6 +115,55 @@ class GameCards(pygame.sprite.Sprite):
         deck = self.networking.current_game.deck
         # TODO: draw multiple cards, with various rotation and another pretty things
         self.image = card_image(self.card_set, deck.cards[0])
+
+class ColorChooser(pygame.sprite.Sprite):
+    def __init__(self, x, y, networking: Networking, *groups: AbstractGroup):
+        super().__init__(*groups)
+        self.networking = networking
+        self.rect = pygame.rect.Rect(x, y, 206, 206)
+        self.image = pygame.surface.Surface((206, 206), pygame.SRCALPHA, 32)
+        self._active_color = None
+        self._colors = {
+            (0, 0): (load_image('images/color_chooser/red.png'),
+                     load_image('images/color_chooser/red_active.png')),
+            (1, 0): (load_image('images/color_chooser/green.png'),
+                     load_image('images/color_chooser/green_active.png')),
+            (0, 1): (load_image('images/color_chooser/yellow.png'),
+                     load_image('images/color_chooser/yellow_active.png')),
+            (1, 1): (load_image('images/color_chooser/blue.png'),
+                     load_image('images/color_chooser/blue_active.png')),
+        }
+
+    def handle_events(self, event: Event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            card = None
+            if self._active_color == (0, 0):
+                card = random_cards(color=Colors.RED)[0]
+            if self._active_color == (1, 0):
+                card = random_cards(color=Colors.GREEN)[0]
+            if self._active_color == (0, 1):
+                card = random_cards(color=Colors.YELLOW)[0]
+            if self._active_color == (1, 1):
+                card = random_cards(color=Colors.BLUE)[0]
+            self.networking.throw_card(0, card, ignore=True)
+            #self.networking.throw_card(self.networking.user.id, card, ignore=True)
+            # self.networking.current_game.next_player()
+            # time.sleep(1)
+            return
+
+
+
+    def update(self, *args: Any, **kwargs: Any) -> None:
+        self.image.fill((0, 0, 0, 0))
+        for x in range(2):
+            for y in range(2):
+                rect = pygame.rect.Rect(self.rect.x + x * 103, self.rect.y + y * 103, 103, 103)
+                if rect.collidepoint(pygame.mouse.get_pos()):
+                    self.image.blit(self._colors[(x, y)][1], dest=(x * 103, y * 103))
+                    self._active_color = (x, y)
+                else:
+                    self.image.blit(self._colors[(x, y)][0], dest=(x * 103, y * 103))
+
 
 
 class CardGiver(pygame.sprite.Sprite):
@@ -167,10 +215,12 @@ class UnoButton(pygame.sprite.Sprite):
             if self.is_active:
                 self.networking.say_uno()
         if event.type == pygame.USEREVENT + 4:
-            self.ai_time -= 1
-            if self.ai_time <= 0:
-                self.networking.get_card()
-                self.timer_able = True
+            pass
+            # self.ai_time -= 1
+            # if self.ai_time <= 0:
+            #     self.ai_time = 5
+            #     self.networking.get_card()
+            #     self.timer_able = True
 
     def update(self):
         if not self.rect.collidepoint(pygame.mouse.get_pos()):
@@ -205,7 +255,6 @@ class PlayingScene(Scene):
         self.TURN_TIME_EVENT_CODE = 99
         pygame.time.set_timer(self.TURN_TIME_EVENT_CODE, 1000)
         self._miscellaneous_group = EventGroup()
-        print(params)
         self.player_counts = len(params)
         self.card_stack = load_image("playing_game_img/card_stack.png")
         self.btn_uno = load_image("playing_game_img/btn_uno.png")
@@ -239,6 +288,7 @@ class PlayingScene(Scene):
         # self.card_image = image_loader.get_image(image_keys.IMG_CARD)
         self.resize_images()
         self.initialize_elements()
+        self._color_chooser = ColorChooser(540, 260, self.networking, self._miscellaneous_group)
         self.last_user = self.networking.user
         self.draw_my_player()
 
@@ -262,18 +312,13 @@ class PlayingScene(Scene):
         text_myrect.y = get_screen_height() - 160
         self.screen.blit(text_myname, text_myrect)
 
-        #        for i in range(len(self.player.deck.cards)):
-        #            xx=200 + i*140
-        #            yy=500
-        #            self.screen.blit(card_image(self.card_set, self.player.deck.cards[i]), vp(xx, yy))
-
         if self.player == self.networking.get_user_from_game():
             text_turn = self.font.render("Meow! My Turn!", True, (255, 0, 0))
             text_turn_rect = text_turn.get_rect()
             text_turn_rect.x = vw((1280 / 2) - 300)
             text_turn_rect.y = vh(600)
             self.screen.blit(text_turn, text_turn_rect)
-        for i in range(len(players) - 1):
+        for i in range(len(players)):
 
             x = 40 + i * 260
             y = 0
@@ -300,61 +345,36 @@ class PlayingScene(Scene):
 
 
     def resize_images(self):
-        # self.card_image = pygame.transform.smoothscale(self.card_image, vp(110, 176))
         super().resize_images()
         self.card_stack = pygame.transform.scale(self.card_stack, vp(110, 176))
-        # self.btn_deck = pygame.transform.scale(self.btn_deck, vp(127, 188))
         self.btn_uno = pygame.transform.scale(self.btn_uno, vp(163, 115))
         self.btn_view_cards = pygame.transform.scale(self.btn_view_cards, vp(199, 107))
         self.btn_turn_off = pygame.transform.scale(self.btn_turn_off, vp(179, 110))
         self.btn_pause = pygame.transform.scale(self.btn_pause, vp(91, 129))
         self.my_cat = pygame.transform.scale(self.my_cat, vp(121, 141))
-        # self.cat1 = pygame.transform.scale(self.cat1, vp(80, 120))
-        # self.cat2 = pygame.transform.scale(self.cat2, vp(80, 120))
-        # self.cat3 = pygame.transform.scale(self.cat3, vp(80, 120))
-        # self.cat4 = pygame.transform.scale(self.cat4, vp(80, 120))
-        # self.cat5 = pygame.transform.scale(self.cat5, vp(80, 120))
-        # self.small_card = pygame.transform.scale(self.small_card, vp(50, 79))
 
     def create_card_buttons(self):
-        # btn_deck = FocusableUIButton(
-        #    relative_rect=pygame.Rect((get_screen_width() / 2 - (127 + 75), vh(235)), vp(127, 188)),
-        #    text="",
-        #    manager=self.gui_manager,
-        #    object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_deck")
-        # )
-        # btn_uno = FocusableUIButton(
-        #    relative_rect=pygame.Rect((get_screen_width() / 2 + 150, get_screen_height() / 2 - 60), vp(163, 115)),
-        #    text="",
-        #    manager=self.gui_manager,
-        #    object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_uno")
-        # )
-
         btn_pause = FocusableUIButton(
-            relative_rect=pygame.Rect(vp(vw(23), get_screen_height() - 143), vp(91, 129)),
+            relative_rect=pygame.Rect((vw(23), get_screen_height() - 143), vp(91, 129)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_pause")
         )
-        #        btn_deck.drawable_shape.states['normal'].surface.blit(self.btn_deck, (0, 0))
-        # btn_uno.drawable_shape.states['normal'].surface.blit(self.btn_uno, (0, 0))
         btn_pause.drawable_shape.states['normal'].surface.blit(self.btn_pause, (0, 0))
 
-        #        btn_deck.drawable_shape.active_state.has_fresh_surface = True
-        # btn_uno.drawable_shape.active_state.has_fresh_surface = True
         btn_pause.drawable_shape.active_state.has_fresh_surface = True
 
         self.focusable_buttons.extend([btn_pause])
 
     def create_side_buttons(self):
         btn_view_cards = FocusableUIButton(
-            relative_rect=pygame.Rect(vp(get_screen_width() - 200, get_screen_height() / 2 - 140), vp(199, 107)),
+            relative_rect=pygame.Rect((get_screen_width() - 200, get_screen_height() / 2 - 140), vp(199, 107)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_view_cards")
         )
         btn_turn_off = FocusableUIButton(
-            relative_rect=pygame.Rect(vp(get_screen_width() - 180, get_screen_height() / 2 - 20), vp(179, 110)),
+            relative_rect=pygame.Rect((get_screen_width() - 180, get_screen_height() / 2 - 20), vp(179, 110)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_turn_off")
@@ -371,6 +391,8 @@ class PlayingScene(Scene):
         self._miscellaneous_group.handle_events(event)
         cur_user = self.networking.get_user_from_game()
         if cur_user != self.last_user:
+            print("======Current User! "+cur_user.name+"======")
+            self.last_user = cur_user
             self.turn_time = 30
         if cur_user.is_ai:
             if cur_user.throwable:
@@ -385,7 +407,6 @@ class PlayingScene(Scene):
                 self.state.active_overlay(overlay_name.CONFIGURATION)
         if event.type == self.TURN_TIME_EVENT_CODE:
             self.turn_time -= 1
-            seconds = self.turn_time
             if self.turn_time <= 0:
                 self.turn_time = 30
                 self.networking.get_card()
@@ -393,20 +414,21 @@ class PlayingScene(Scene):
 
 
     def draw(self):
+        if (isinstance(self.networking.current_game.deck.cards[0], WildChangeColorCard) or
+            isinstance(self.networking.current_game.deck.cards[0], WildGetFourCard)) and \
+                self.networking.is_our_move and not self.networking.get_user_from_game().is_ai:
+            self._color_chooser.add(self._miscellaneous_group)
+        else:
+            self._color_chooser.remove(self._miscellaneous_group)
         self.screen.fill((141, 168, 104))
-        # Add your game drawing code here
-        # self.screen.blit(self.card_stack, vp(get_screen_width() / 2 + 25, 247))
-        # self.screen.blit(self.my_cat, vp(get_screen_width() / 2 - 80, get_screen_height() - 238))
-        # self.screen.blit(self.small_card, vp(get_screen_width() / 2 + 40, get_screen_height() - 180))
         self.draw_players(self.opponent_players)
         self._all_cards.draw(self.screen)
         self._all_cards.update()
-        if self.networking.is_our_move and not self.networking.get_user_from_game().deck.uno_said \
-                and len(self.networking.get_user_from_game().deck.cards) == 7:
+        if not self.networking.get_user_from_game().deck.uno_said \
+                and len(self.networking.get_user_from_game().deck.cards) == 2:
             self._uno_button.add(self._miscellaneous_group)
         else:
             self._uno_button.remove(self._miscellaneous_group)
-
 
         self._miscellaneous_group.draw(self.screen)
         self._miscellaneous_group.update()

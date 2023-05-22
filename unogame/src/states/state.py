@@ -1,11 +1,12 @@
 class GameState:
-    def __init__(self):
+    def __init__(self, server=None):
         self.scene_changed = False
         self.next_scene_name = None
         self.overlay_active_changed = False
         self.overlay_active = False
         self.overlay_scene_name = None
         self.next_params = None
+        self.server = None
 
     def handle_events(self, events):
         pass
