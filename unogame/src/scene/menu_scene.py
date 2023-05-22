@@ -114,7 +114,9 @@ class MenuScene(Scene):
                     self.state.start_single_play()
                 elif event.ui_element == self.scrollable_buttons[1]:
                     self.state.open_story_play()
-                elif event.ui_element == self.focusable_buttons[2]:
+                elif event.ui_element == self.scrollable_buttons[2]:
+                    self.state.open_multi_play()
+                elif event.ui_element == self.focusable_buttons[4]:
                     self.state.open_configuration()
                 elif event.ui_element == self.focusable_buttons[4]:
                     self.state.exit()
