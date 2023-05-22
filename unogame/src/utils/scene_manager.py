@@ -1,9 +1,16 @@
 import pygame
 
+from classes.auth.ai_user import AIUser
 from classes.auth.user import User
 from classes.game.networking import Networking
 from scene.lobby_scene import LobbyScene
 from scene.main_screen import MainScreen
+from scene.multi_access_scene import MultiAccessScene
+from scene.multi_game_scene import MultiGameScene
+from scene.multi_robby_scene import MultiRobbyScene
+from scene.multi_role_scene import MultiRoleScene
+from scene.multi_password_scene import MultiPasswordScene
+
 from scene.result_scene import ResultScene
 from utils import scene_name, overlay_name
 from scene import MenuScene,LandingScene,PlayingScene,ConfigurationOverlayScene, StoryMapScene
@@ -38,15 +45,21 @@ class SceneManager:
             scene_name.LOBBY_SCENE: LobbyScene,
             scene_name.STORY_MAP_SCENE: StoryMapScene,
             scene_name.PLAYING_SCENE: MainScreen,
-            scene_name.RESULT_SCENE: ResultScene
+            scene_name.RESULT_SCENE: ResultScene,
+            scene_name.MULTI_ROLE_SCENE : MultiRoleScene,
+            scene_name.MULTI_ACCESS_SCENE: MultiAccessScene,
+            scene_name.MULTI_PASSWORD_SCENE: MultiPasswordScene,
+            scene_name.MULTI_GAME_SCENE: MultiGameScene,
+            scene_name.MULTI_ROBBY_SCENE: MultiRobbyScene
         }
         self.overlay_scenes = {
             overlay_name.CONFIGURATION: ConfigurationOverlayScene
         }
         self.current_sound = self.sounds["LOBBY"]
         self.current_sound.play()
-        params = {"winner":User(0,'haemin')}
-        self.current_scene = self.scenes[scene_name.MAIN_MENU](screen, gui_manager)
+        params = [User(0, "Me"), AIUser(1, "Computer1", is_ai=True), AIUser(2, "Computer2", is_ai=True),
+                       AIUser(3, "Computer3", is_ai=True)]
+        self.current_scene = self.scenes[scene_name.PLAYING_GAME](screen, gui_manager,params)
         self.current_overlay = self.overlay_scenes[overlay_name.CONFIGURATION](screen, overlay_manager)
 
     def update(self):
@@ -91,3 +104,4 @@ class SceneManager:
     def draw(self):
         self.current_scene.draw()
         self.current_overlay.draw()
+

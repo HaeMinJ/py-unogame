@@ -15,6 +15,9 @@ class MenuState(GameState):
     def open_configuration(self):
         self.active_overlay(overlay_name.CONFIGURATION)
 
+    def open_multi_play(self):
+        self.move_scene(scene_name.MULTI_ROLE_SCENE)
+
     def toggle_configuration(self):
         if self.overlay_active:
             self.inactive_overlay(overlay_name.CONFIGURATION)
