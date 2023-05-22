@@ -6,6 +6,7 @@ from pygame.event import Event
 from pygame.sprite import AbstractGroup
 from pygame_gui.core import ObjectID
 
+from classes.cards.special_cards import SpecialCard, GetTwoCard, GetOneCard, GetThreeCard, ReverseCard
 from classes.cards.wild_cards import WildChangeColorCard, WildGetFourCard
 from classes.enums.colors import Colors
 from classes.game.networking import Networking
@@ -14,7 +15,7 @@ from config.configuration import get_screen_width, get_screen_height, vw, vh, vp
 from scene import Scene
 from scene.main_screen import EventGroup
 from states.playing_state import PlayingState
-from utils import action_name, overlay_name
+from utils import action_name, overlay_name, scene_name
 from utils.card_utility import card_image, random_cards
 from utils.resource_path import resource_path
 from widgets import FocusableUIButton
@@ -35,6 +36,7 @@ class Cards(pygame.sprite.Sprite):
     def __init__(self, user_id: int, x, y, networking: Networking, *groups: AbstractGroup,
                  max_width: int = vw(600), is_blank: bool = True, rotation: int = 0):
         super().__init__(*groups)
+        self.keyboard_mode = False
         self.networking = networking
         self.user_id = user_id
         self.max_width = max_width
@@ -55,6 +57,31 @@ class Cards(pygame.sprite.Sprite):
         self.throw_sound.set_volume(configuration.get_whole_sound_volume())
 
     def handle_events(self, event):
+        if event.type == pygame.KEYDOWN:
+            key_event = event.key
+            action = get_action(key_event)
+            if action == action_name.MOVE_RIGHT:
+                self.keyboard_mode = True
+                self._active_card_index += 1
+                print(self._active_card_index)
+            elif action == action_name.MOVE_LEFT:
+                self.keyboard_mode = True
+                self._active_card_index -= 1
+
+            if action == action_name.RETURN:
+                if self._active_card_index >= 0 and \
+                        self.networking.is_our_move:
+                    if self.networking.throw_card(0, self._active_card_index):
+                        pass
+                    pygame.time.set_timer(pygame.USEREVENT + 100, 100, 10)
+                    from config import configuration
+                    if configuration.is_sound_on():
+                        self.throw_sound.play(1)
+                else:
+                    from config import configuration
+                    if configuration.is_sound_on():
+                        self.wrong_sound.play(1)
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             print("Card Clicked!" + str(self._active_card_index))
             if self._active_card_index >= 0 and \
@@ -82,8 +109,10 @@ class Cards(pygame.sprite.Sprite):
                     # coordinates regarding our sprite
                     mouse_x -= self.rect.x
                     self._active_card_index = int(mouse_x // (self.max_width / len(deck.cards)))
+                    self.keyboard_mode = False
                 else:
-                    self._active_card_index = -1
+                    if not self.keyboard_mode:
+                        self._active_card_index = -1
             for i, card in enumerate(deck.cards):
                 image = pygame.transform.rotate(
                     card_image(self.card_set, card) if not self.is_blank else load_image(
@@ -116,6 +145,7 @@ class GameCards(pygame.sprite.Sprite):
         # TODO: draw multiple cards, with various rotation and another pretty things
         self.image = card_image(self.card_set, deck.cards[0])
 
+
 class ColorChooser(pygame.sprite.Sprite):
     def __init__(self, x, y, networking: Networking, *groups: AbstractGroup):
         super().__init__(*groups)
@@ -146,12 +176,10 @@ class ColorChooser(pygame.sprite.Sprite):
             if self._active_color == (1, 1):
                 card = random_cards(color=Colors.BLUE)[0]
             self.networking.throw_card(0, card, ignore=True)
-            #self.networking.throw_card(self.networking.user.id, card, ignore=True)
+            # self.networking.throw_card(self.networking.user.id, card, ignore=True)
             # self.networking.current_game.next_player()
             # time.sleep(1)
             return
-
-
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         self.image.fill((0, 0, 0, 0))
@@ -163,7 +191,6 @@ class ColorChooser(pygame.sprite.Sprite):
                     self._active_color = (x, y)
                 else:
                     self.image.blit(self._colors[(x, y)][0], dest=(x * 103, y * 103))
-
 
 
 class CardGiver(pygame.sprite.Sprite):
@@ -180,6 +207,19 @@ class CardGiver(pygame.sprite.Sprite):
         self.rect.y = y
 
     def handle_events(self, event):
+        if event.type == pygame.KEYDOWN:
+            key_event = event.key
+            action = get_action(key_event)
+            if action == action_name.CARD_GIVER:
+                self.image = self._active
+                self.is_active = True
+            else:
+                self.is_active = False
+                self.image = self._non_active
+            if self.is_active:
+                if self.networking.is_our_move:  # and self.networking.get_user_from_game() == 0:
+                    self.networking.get_card()
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.is_active:
                 if self.networking.is_our_move:  # and self.networking.get_user_from_game() == 0:
@@ -243,9 +283,6 @@ class UnoButton(pygame.sprite.Sprite):
 
 
 class PlayingScene(Scene):
-    def initialize_elements(self):
-        self.create_card_buttons()
-        self.create_side_buttons()
 
     def __init__(self, screen, gui_manager, params=None):  # , image_loader: ImageLoader):
         super().__init__(screen, gui_manager, params)  # , image_loader)
@@ -259,8 +296,8 @@ class PlayingScene(Scene):
         self.card_stack = load_image("playing_game_img/card_stack.png")
         self.btn_uno = load_image("playing_game_img/btn_uno.png")
         self.btn_view_cards = load_image("playing_game_img/btn_view_cards.png")
-        self.btn_turn_off = load_image("playing_game_img/btn_turn_off.png")
-        self.btn_pause = load_image("playing_game_img/btn_pause.png")
+        # self.btn_turn_off = load_image("playing_game_img/btn_turn_off.png")
+        # self.btn_pause = load_image("playing_game_img/btn_pause.png")
         self.my_cat = load_image("playing_game_img/my_cat.png")
         self.small_card = load_image("playing_game_img/small_card.png")
         self.card_set = load_image('images/cards.png')
@@ -274,6 +311,7 @@ class PlayingScene(Scene):
 
         self.opponent_players = params[1:]
         self.player = params[0]
+        self.all_players = params
         self.deck_num = 3
 
         self._all_cards = EventGroup()
@@ -291,7 +329,6 @@ class PlayingScene(Scene):
         self._color_chooser = ColorChooser(540, 260, self.networking, self._miscellaneous_group)
         self.last_user = self.networking.user
         self.draw_my_player()
-
 
     def draw_my_player(self):
         Cards(0, vw((1280 / 2) - 300), vh(600), self.networking,
@@ -343,62 +380,35 @@ class PlayingScene(Scene):
             self.screen.blit(self.small_card, vp(x + 90, y + 100))
             self.screen.blit(text_card_num, text_cardrect)
 
-
     def resize_images(self):
         super().resize_images()
         self.card_stack = pygame.transform.scale(self.card_stack, vp(110, 176))
         self.btn_uno = pygame.transform.scale(self.btn_uno, vp(163, 115))
         self.btn_view_cards = pygame.transform.scale(self.btn_view_cards, vp(199, 107))
-        self.btn_turn_off = pygame.transform.scale(self.btn_turn_off, vp(179, 110))
-        self.btn_pause = pygame.transform.scale(self.btn_pause, vp(91, 129))
+        # self.btn_turn_off = pygame.transform.scale(self.btn_turn_off, vp(179, 110))
+        # self.btn_pause = pygame.transform.scale(self.btn_pause, vp(91, 129))
         self.my_cat = pygame.transform.scale(self.my_cat, vp(121, 141))
-
-    def create_card_buttons(self):
-        btn_pause = FocusableUIButton(
-            relative_rect=pygame.Rect((vw(23), get_screen_height() - 143), vp(91, 129)),
-            text="",
-            manager=self.gui_manager,
-            object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_pause")
-        )
-        btn_pause.drawable_shape.states['normal'].surface.blit(self.btn_pause, (0, 0))
-
-        btn_pause.drawable_shape.active_state.has_fresh_surface = True
-
-        self.focusable_buttons.extend([btn_pause])
-
-    def create_side_buttons(self):
-        btn_view_cards = FocusableUIButton(
-            relative_rect=pygame.Rect((get_screen_width() - 200, get_screen_height() / 2 - 140), vp(199, 107)),
-            text="",
-            manager=self.gui_manager,
-            object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_view_cards")
-        )
-        btn_turn_off = FocusableUIButton(
-            relative_rect=pygame.Rect((get_screen_width() - 180, get_screen_height() / 2 - 20), vp(179, 110)),
-            text="",
-            manager=self.gui_manager,
-            object_id=ObjectID(object_id=f"button_b_1", class_id="@playing_game_btn_turn_off")
-        )
-        btn_view_cards.drawable_shape.states['normal'].surface.blit(self.btn_view_cards, (0, 0))
-        btn_turn_off.drawable_shape.states['normal'].surface.blit(self.btn_turn_off, (0, 0))
-        btn_view_cards.drawable_shape.active_state.has_fresh_surface = True
-        btn_turn_off.drawable_shape.active_state.has_fresh_surface = True
-
-        self.focusable_buttons.extend([btn_view_cards, btn_turn_off])
 
     def process_events(self, event):
         self._all_cards.handle_events(event)
         self._miscellaneous_group.handle_events(event)
         cur_user = self.networking.get_user_from_game()
+
+        for i in range(len(self.all_players)):
+            if len(self.all_players[i].deck.cards) <= 0:
+                params = {
+                    "winner": self.all_players[i]
+                }
+                self.state.move_scene(next_scene_name=scene_name.RESULT_SCENE, params=params)
         if cur_user != self.last_user:
-            print("======Current User! "+cur_user.name+"======")
+            print("======Current User! " + cur_user.name + "======")
             self.last_user = cur_user
             self.turn_time = 30
         if cur_user.is_ai:
             if cur_user.throwable:
                 pygame.time.set_timer(self.timer_event + 5, 3000, 1)
             cur_user.throwable = False
-        if event.type == self.timer_event+5 and cur_user.is_ai:
+        if event.type == self.timer_event + 5 and cur_user.is_ai:
             cur_user.do_action(networking=self.networking)
         if event.type == pygame.KEYDOWN:
             key_event = event.key
@@ -411,7 +421,23 @@ class PlayingScene(Scene):
                 self.turn_time = 30
                 self.networking.get_card()
 
+    def draw_special_card(self, card):
+        if card == 1 :
+            text = self.font.render("Get One Card!", True, (255, 0, 0))
+        elif card == 2 :
+            text = self.font.render("Get Two Card!", True, (255, 0, 0))
+        elif card == 3:
+            text = self.font.render("Get Three Card!", True, (255, 0, 0))
+        elif card == 0:
+            text = self.font.render("Back!", True, (255, 0, 0))
+        text_turn_rect = text.get_rect()
+        text_turn_rect.x = vw((1280 / 2) + 150)
+        text_turn_rect.y = vh(360)
+        self.screen.blit(text, text_turn_rect)
 
+    def card_color(self, card_color):
+        print(card_color)
+        pygame.draw.circle(self.screen, (card_color.value.r,card_color.value.g,card_color.value.b), [370, 380], 30)
 
     def draw(self):
         if (isinstance(self.networking.current_game.deck.cards[0], WildChangeColorCard) or
@@ -430,6 +456,15 @@ class PlayingScene(Scene):
         else:
             self._uno_button.remove(self._miscellaneous_group)
 
+        self.card_color(self.networking.current_game.deck.cards[0].color)
         self._miscellaneous_group.draw(self.screen)
         self._miscellaneous_group.update()
         self.gui_manager.draw_ui(self.screen)
+        if (isinstance(self.networking.current_game.deck.cards[0], GetTwoCard)):
+            self.draw_special_card(2)
+        elif (isinstance(self.networking.current_game.deck.cards[0], GetOneCard)):
+            self.draw_special_card(1)
+        elif (isinstance(self.networking.current_game.deck.cards[0], GetThreeCard)):
+            self.draw_special_card(3)
+        elif (isinstance(self.networking.current_game.deck.cards[0], ReverseCard)):
+            self.draw_special_card(0)
