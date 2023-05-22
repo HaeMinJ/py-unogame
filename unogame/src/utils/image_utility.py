@@ -5,7 +5,7 @@ from config import configuration
 from utils.resource_path import resource_path
 
 
-def load_image(name: str, colorkey: int = None, directory: str = 'assets/'+configuration.BLIND_MODE):
+def load_image(name: str, colorkey: int = None, directory: str = 'assets/default'):
     fullname = resource_path(os.path.join(directory, name))
     if not os.path.isfile(fullname):
         raise FileNotFoundError("해당하는 파일이 없습니다. '{fullname}'")
