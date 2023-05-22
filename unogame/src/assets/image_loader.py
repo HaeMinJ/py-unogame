@@ -8,7 +8,7 @@ img_dict = {
     "IMG_BTN_EXIT": "btn_exit.png",
     "IMG_BTN_RANKING": "btn_ranking.png",
     "IMG_BTN_SETTING": "btn_setting.png",
-    "IMG_CARD": "card.png",
+    "IMG_CARD": "cards.png",
     "IMG_LOGO": "logo.png",
     "IMG_MAIN_BG": "main_bg.png",
     "IMG_BTN_MENU": "menu_btn.png",

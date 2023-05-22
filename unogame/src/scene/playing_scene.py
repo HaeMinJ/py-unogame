@@ -50,9 +50,9 @@ class Cards(pygame.sprite.Sprite):
         self.rotation = rotation
         self.wrong_sound = pygame.mixer.Sound(resource_path("assets/sound/wrong.mp3"))
         from config import configuration
-        self.wrong_sound.set_volume(configuration.get_sound_volume())
+        self.wrong_sound.set_volume(configuration.get_whole_sound_volume())
         self.throw_sound = pygame.mixer.Sound(resource_path("assets/sound/throw_card.mp3"))
-        self.throw_sound.set_volume(configuration.get_sound_volume())
+        self.throw_sound.set_volume(configuration.get_whole_sound_volume())
 
     def handle_events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:

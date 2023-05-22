@@ -56,7 +56,8 @@ class SceneManager:
             overlay_name.CONFIGURATION: ConfigurationOverlayScene
         }
         self.current_sound = self.sounds["LOBBY"]
-        self.current_sound.play()
+        if configuration.is_sound_on():
+            self.current_sound.play()
         params = [User(0, "Me"), AIUser(1, "Computer1", is_ai=True), AIUser(2, "Computer2", is_ai=True),
                        AIUser(3, "Computer3", is_ai=True)]
         self.current_scene = self.scenes[scene_name.PLAYING_GAME](screen, gui_manager,params)
