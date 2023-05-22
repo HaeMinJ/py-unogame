@@ -65,8 +65,20 @@ KEYBOARD_MAP = {
     pygame.K_ESCAPE: action_name.PAUSE,
     pygame.K_RETURN: action_name.RETURN,
     pygame.K_c: action_name.CARD_GIVER
+
     # Add more key-action mappings here
 }
+def set_keyboard_map(up, down, left, right):
+    global KEYBOARD_MAP
+    KEYBOARD_MAP = {
+        up: action_name.MOVE_UP,
+        down: action_name.MOVE_DOWN,
+        left: action_name.MOVE_LEFT,
+        right: action_name.MOVE_RIGHT,
+        pygame.K_SPACE: action_name.FIRE,
+        pygame.K_ESCAPE: action_name.PAUSE,
+        pygame.K_RETURN: action_name.RETURN,
+    }
 
 def vw(width):
     return (width * SCREEN_WIDTH) / 1280
@@ -116,11 +128,12 @@ async def load_config_from_file():
         "SOUND_ON": SOUND_ON
     }
     try:
-        with open(filename, "a") as f:
+        with open(filename, "r") as f:
             configurations = json.load(f)
             convert_to_current_config(configurations)
             convert_keybinding(configurations["keybinding"])
             pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
     except FileNotFoundError:
         print(f"The file '{filename}' does not exist. Creating a new file.")
         with open(filename, 'w') as file:

@@ -11,6 +11,8 @@ from utils.image_utility import load_image
 from widgets.overlay import OverlayScene
 from widgets import ScrollableUIButton, FocusableUIButton
 from scene import Scene
+from config import configuration
+
 
 class ConfigurationOverlayScene(OverlayScene):
 
@@ -187,26 +189,33 @@ class ConfigurationOverlayScene(OverlayScene):
         self.background_sound=""
         self.effect_sound=""
 
+        # 키 세팅 값
+        self.key_setting = ""
+        self.up_key = ""
+        self.down_key = ""
+        self.left_key = ""
+        self.right_key = ""
+
     def create_input_key(self):
         self.up_key_input = pygame_gui.elements.UITextEntryLine(
-            relative_rect=pygame.Rect(vp(300, 275), vp(100, 50)),
+            relative_rect=pygame.Rect(vp(300, 275), vp(50, 50)),
             container=self.panel,
-            manager=self.gui_manager
+            manager=self.overlay_manager
         )
         self.down_key_input = pygame_gui.elements.UITextEntryLine(
-            relative_rect=pygame.Rect(vp(750, 275), vp(100, 50)),
+            relative_rect=pygame.Rect(vp(750, 275), vp(50, 50)),
             container=self.panel,
-            manager=self.gui_manager
+            manager=self.overlay_manager
         )
         self.left_key_input = pygame_gui.elements.UITextEntryLine(
-            relative_rect=pygame.Rect(vp(750, 200), vp(100, 50)),
+            relative_rect=pygame.Rect(vp(750, 200), vp(50, 50)),
             container=self.panel,
-            manager=self.gui_manager
+            manager=self.overlay_manager
         )
         self.right_key_input = pygame_gui.elements.UITextEntryLine(
-            relative_rect=pygame.Rect(vp(300, 200), vp(100, 50)),
+            relative_rect=pygame.Rect(vp(300, 200), vp(50, 50)),
             container=self.panel,
-            manager=self.gui_manager
+            manager=self.overlay_manager
         )
         self.input_key.extend([self.up_key_input, self.down_key_input, self.left_key_input, self.right_key_input])
 
@@ -390,24 +399,51 @@ class ConfigurationOverlayScene(OverlayScene):
         self.effect_sound_setting_bg.visible = True
 
     def process_events(self, event):
-        super().process_events(event)
+        # super().process_events(event)
         # 엔터 입력시 값 입력
-        if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
-            if event.ui_element == self.whole_sound_input:
-                self.whole_sound = self.whole_sound_input.get_text()
-                self.state.set_whole_sound_volume(self.whole_sound)
-            if event.ui_element == self.background_sound_input:
-                self.background_sound = self.background_sound_input.get_text()
-                self.state.set_background_sound_volume(self.background_sound)
-            if event.ui_element == self.effect_sound_input:
-                self.effect_sound = self.effect_sound_input.get_text()
-                self.state.set_effect_sound_volume(self.effect_sound)
-
         if event.type == pygame.KEYDOWN:
             key_event = event.key
             action = get_action(key_event)
+            if action != action_name.RETURN:
+                self.key_setting = key_event
             if action == action_name.PAUSE:
                 self.set_inactive()
+
+        if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
+            if event.ui_element == self.up_key_input:
+                self.up_key = self.key_setting
+                self.state.set_up_key(self.up_key, self.down_key, self.left_key, self.right_key)
+            if event.ui_element == self.down_key_input:
+                self.down_key = self.key_setting
+                self.state.set_up_key(self.up_key, self.down_key, self.left_key, self.right_key)
+            if event.ui_element == self.left_key_input:
+                self.left_key = self.key_setting
+                self.state.set_up_key(self.up_key, self.down_key, self.left_key, self.right_key)
+            if event.ui_element == self.right_key_input:
+                self.right_key = self.key_setting
+                self.state.set_up_key(self.up_key, self.down_key, self.left_key, self.right_key)
+
+            if event.ui_element == self.whole_sound_input:
+                self.whole_sound = int(self.whole_sound_input.get_text())
+                self.state.set_whole_sound_volume(self.whole_sound)
+                self.state.set_background_sound_volume((int(configuration.get_background_sound_volume()) + self.whole_sound)/2)
+                self.state.set_effect_sound_volume((int(configuration.get_effect_sound_volume()) + self.whole_sound)/2)
+            if event.ui_element == self.background_sound_input:
+                self.background_sound = int(self.background_sound_input.get_text())
+                if int(configuration.get_whole_sound_volume()) > int(self.background_sound):
+                    self.state.set_background_sound_volume(self.background_sound)
+                else:
+                    self.state.set_background_sound_volume(self.background_sound)
+                    self.state.set_whole_sound_volume(self.background_sound)
+            if event.ui_element == self.effect_sound_input:
+                self.effect_sound = int(self.effect_sound_input.get_text())
+                if int(configuration.get_whole_sound_volume()) > int(self.effect_sound):
+                    self.state.set_effect_sound_volume((self.effect_sound))
+                else:
+                    self.state.set_effect_sound_volume(self.effect_sound)
+                    self.state.set_whole_sound_volume(self.effect_sound)
+
+
 
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:

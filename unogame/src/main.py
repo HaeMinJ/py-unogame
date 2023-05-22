@@ -11,9 +11,9 @@ from config import get_screen_width, get_screen_height, vw, vh, configuration
 from assets.image_loader import ImageLoader
 
 # Initialize pygame and create a window
-# loop = asyncio.get_event_loop()
-# loop.run_until_complete(configuration.load_config_from_file())
-# loop.close()
+loop = asyncio.get_event_loop()
+loop.run_until_complete(configuration.load_config_from_file())
+loop.close()
 
 pygame.init()
 print("Game Start!")
