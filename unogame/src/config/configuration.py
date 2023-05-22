@@ -115,7 +115,7 @@ async def load_config_from_file():
         "SOUND_ON": SOUND_ON
     }
     try:
-        with open(filename, "a") as f:
+        with open(filename, "r") as f:
             configurations = json.load(f)
             convert_to_current_config(configurations)
             convert_keybinding(configurations["keybinding"])
