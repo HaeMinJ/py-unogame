@@ -20,7 +20,7 @@ class ConfigurationState(GameState):
     def get_color_blind(self):
         return configuration.BLIND_MODE
     def set_color_blind(self, blind_mode:string):
-        configuration.BLIND_MODE = blind_mode
+        configuration.set_color_mode(blind_mode)
         self.save_to_file()
     def set_whole_sound_volume(self, whole:int):
         configuration.set_whole_sound_volume(whole)
@@ -32,8 +32,8 @@ class ConfigurationState(GameState):
         configuration.set_effect_sound_volume(effect)
         self.save_to_file()
 
-    def set_up_key(self, up:int, down:int, left:int, right:int):
-        configuration.set_keyboard_map(up, down, left, right)
+    def set_up_key(self, up:int, down:int, left:int, right:int, enter : int):
+        configuration.set_keyboard_map(up, down, left, right, enter)
         self.save_to_file()
 
     def save_to_file(self):
