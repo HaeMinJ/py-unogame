@@ -51,6 +51,7 @@ class SceneManager:
         self.current_scene = self.scenes[scene_name.MAIN_MENU](screen, gui_manager)
         self.current_overlay = self.overlay_scenes[overlay_name.ACHIEVEMENT](screen, overlay_manager)
 
+
     def update(self):
         from config import configuration
         if self.current_sound_on != configuration.is_sound_on():

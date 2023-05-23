@@ -24,7 +24,15 @@ class MenuState(GameState):
         else:
             self.active_overlay(overlay_name.ACHIEVEMENT)
 
+    def open_multi_play(self):
+        self.move_scene(scene_name.MULTI_ROLE_SCENE)
 
+
+    def toggle_achievement(self):
+        if self.overlay_active:
+            self.inactive_overlay(overlay_name.ACHIEVEMENT)
+        else:
+            self.active_overlay(overlay_name.ACHIEVEMENT)
     def toggle_configuration(self):
         if self.overlay_active:
             self.inactive_overlay(overlay_name.CONFIGURATION)
