@@ -70,6 +70,12 @@ class ConfigurationOverlayScene(OverlayScene):
             starting_layer_height=2,
             object_id=ObjectID(object_id="overlay_panel", class_id="@overlay_panels")
         )
+        self.enter_key_setting_bg = pygame_gui.elements.UIPanel(
+            relative_rect=pygame.Rect(vw(186), (get_screen_height() + vh(100)) / 2, vw(421), vh(60)),
+            manager=self.overlay_manager,
+            starting_layer_height=2,
+            object_id=ObjectID(object_id="overlay_panel", class_id="@overlay_panels")
+        )
         # 사운드 설정 배경
         self.whole_sound_setting_bg = pygame_gui.elements.UIPanel(
             relative_rect=pygame.Rect(vw(186), (get_screen_height() - vh(250)) / 2, vw(886), vh(60)),
@@ -135,23 +141,33 @@ class ConfigurationOverlayScene(OverlayScene):
         self.down_key_setting = load_image("down_key_setting.png")
         self.left_key_setting = load_image("left_key_setting.png")
         self.right_key_setting = load_image("right_key_setting.png")
+        self.enter_key_setting = load_image("enter_key_setting.png")
+
         self.up_key_setting = pygame.transform.smoothscale(self.up_key_setting, vp(421, 60))
         self.down_key_setting = pygame.transform.smoothscale(self.down_key_setting, vp(421, 60))
         self.left_key_setting = pygame.transform.smoothscale(self.left_key_setting, vp(421, 60))
         self.right_key_setting = pygame.transform.smoothscale(self.right_key_setting, vp(421, 60))
+        self.enter_key_setting = pygame.transform.smoothscale(self.enter_key_setting, vp(421, 60))
+
 
         self.up_key_setting_bg.drawable_shape.states['normal'].surface.blit(self.up_key_setting, (0, 0))
         self.down_key_setting_bg.drawable_shape.states['normal'].surface.blit(self.down_key_setting, (0, 0))
         self.left_key_setting_bg.drawable_shape.states['normal'].surface.blit(self.left_key_setting, (0, 0))
         self.right_key_setting_bg.drawable_shape.states['normal'].surface.blit(self.right_key_setting, (0, 0))
+        self.enter_key_setting_bg.drawable_shape.states['normal'].surface.blit(self.enter_key_setting, (0, 0))
+
         self.up_key_setting_bg.drawable_shape.active_state.has_fresh_surface = True
         self.down_key_setting_bg.drawable_shape.active_state.has_fresh_surface = True
         self.left_key_setting_bg.drawable_shape.active_state.has_fresh_surface = True
         self.right_key_setting_bg.drawable_shape.active_state.has_fresh_surface = True
+        self.enter_key_setting_bg.drawable_shape.active_state.has_fresh_surface = True
+
         self.up_key_setting_bg.visible = False
         self.down_key_setting_bg.visible = False
         self.left_key_setting_bg.visible = False
         self.right_key_setting_bg.visible = False
+        self.enter_key_setting_bg.visible = False
+
 
         self.create_elements()
         self.create_tab_buttons()
@@ -195,45 +211,51 @@ class ConfigurationOverlayScene(OverlayScene):
         self.down_key = ""
         self.left_key = ""
         self.right_key = ""
+        self.enter_key = ""
 
     def create_input_key(self):
         self.up_key_input = pygame_gui.elements.UITextEntryLine(
             relative_rect=pygame.Rect(vp(300, 275), vp(50, 50)),
             container=self.panel,
-            manager=self.overlay_manager
+            manager=self.gui_manager
         )
         self.down_key_input = pygame_gui.elements.UITextEntryLine(
             relative_rect=pygame.Rect(vp(750, 275), vp(50, 50)),
             container=self.panel,
-            manager=self.overlay_manager
+            manager=self.gui_manager
         )
         self.left_key_input = pygame_gui.elements.UITextEntryLine(
             relative_rect=pygame.Rect(vp(750, 200), vp(50, 50)),
             container=self.panel,
-            manager=self.overlay_manager
+            manager=self.gui_manager
         )
         self.right_key_input = pygame_gui.elements.UITextEntryLine(
             relative_rect=pygame.Rect(vp(300, 200), vp(50, 50)),
             container=self.panel,
-            manager=self.overlay_manager
+            manager=self.gui_manager
         )
-        self.input_key.extend([self.up_key_input, self.down_key_input, self.left_key_input, self.right_key_input])
+        self.enter_key_input = pygame_gui.elements.UITextEntryLine(
+            relative_rect=pygame.Rect(vp(300, 370), vp(50, 50)),
+            container=self.panel,
+            manager=self.gui_manager
+        )
+        self.input_key.extend([self.up_key_input, self.down_key_input, self.left_key_input, self.right_key_input, self.enter_key_input])
 
     def create_input_sound(self):
         self.whole_sound_input = pygame_gui.elements.UITextEntryLine(
             relative_rect=pygame.Rect(vp(500, 200), vp(100, 50)),
             container=self.panel,
-            manager=self.overlay_manager
+            manager=self.gui_manager
         )
         self.background_sound_input = pygame_gui.elements.UITextEntryLine(
             relative_rect=pygame.Rect(vp(500, 275), vp(100, 50)),
             container=self.panel,
-            manager=self.overlay_manager
+            manager=self.gui_manager
         )
         self.effect_sound_input = pygame_gui.elements.UITextEntryLine(
             relative_rect=pygame.Rect(vp(500, 350), vp(100, 50)),
             container=self.panel,
-            manager=self.overlay_manager
+            manager=self.gui_manager
         )
         self.input_sound.extend([self.whole_sound_input, self.background_sound_input, self.effect_sound_input])
 
@@ -350,6 +372,8 @@ class ConfigurationOverlayScene(OverlayScene):
         self.down_key_setting_bg.visible = False
         self.left_key_setting_bg.visible = False
         self.right_key_setting_bg.visible = False
+        self.enter_key_setting_bg.visible = False
+
 
         for i in range(len(self.input_sound)):
             self.input_sound[i].visible = False
@@ -371,6 +395,8 @@ class ConfigurationOverlayScene(OverlayScene):
         self.down_key_setting_bg.visible = True
         self.left_key_setting_bg.visible = True
         self.right_key_setting_bg.visible = True
+        self.enter_key_setting_bg.visible = True
+
 
         for i in range(len(self.input_sound)):
             self.input_sound[i].visible = False
@@ -391,6 +417,8 @@ class ConfigurationOverlayScene(OverlayScene):
         self.down_key_setting_bg.visible = False
         self.left_key_setting_bg.visible = False
         self.right_key_setting_bg.visible = False
+        self.enter_key_setting_bg.visible = False
+
 
         for i in range(len(self.input_sound)):
             self.input_sound[i].visible = True
@@ -404,7 +432,8 @@ class ConfigurationOverlayScene(OverlayScene):
         if event.type == pygame.KEYDOWN:
             key_event = event.key
             action = get_action(key_event)
-            if action != action_name.RETURN:
+            print(key_event)
+            if key_event != 13:
                 self.key_setting = key_event
             if action == action_name.PAUSE:
                 self.set_inactive()
@@ -412,16 +441,19 @@ class ConfigurationOverlayScene(OverlayScene):
         if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
             if event.ui_element == self.up_key_input:
                 self.up_key = self.key_setting
-                self.state.set_up_key(self.up_key, self.down_key, self.left_key, self.right_key)
+                self.state.set_up_key(self.up_key, self.down_key, self.left_key, self.right_key, self.enter_key)
             if event.ui_element == self.down_key_input:
                 self.down_key = self.key_setting
-                self.state.set_up_key(self.up_key, self.down_key, self.left_key, self.right_key)
+                self.state.set_up_key(self.up_key, self.down_key, self.left_key, self.right_key, self.enter_key)
             if event.ui_element == self.left_key_input:
                 self.left_key = self.key_setting
-                self.state.set_up_key(self.up_key, self.down_key, self.left_key, self.right_key)
+                self.state.set_up_key(self.up_key, self.down_key, self.left_key, self.right_key, self.enter_key)
             if event.ui_element == self.right_key_input:
                 self.right_key = self.key_setting
-                self.state.set_up_key(self.up_key, self.down_key, self.left_key, self.right_key)
+                self.state.set_up_key(self.up_key, self.down_key, self.left_key, self.right_key, self.enter_key)
+            if event.ui_element == self.enter_key_input:
+                self.enter_key = self.key_setting
+                self.state.set_up_key(self.up_key, self.down_key, self.left_key, self.right_key, self.enter_key)
 
             if event.ui_element == self.whole_sound_input:
                 self.whole_sound = int(self.whole_sound_input.get_text())

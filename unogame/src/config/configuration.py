@@ -17,9 +17,6 @@ BACKGROUND_SOUND_VOLUME = 30
 EFFECT_SOUND_VOLUME = 30
 SOUND_ON = True
 
-
-def get_color_mode():
-    return BLIND_MODE
 def set_whole_sound_volume(v:int):
     global WHOLE_SOUND_VOLUME
     WHOLE_SOUND_VOLUME = v
@@ -51,6 +48,13 @@ def get_screen_width():
 def get_screen_height():
     return SCREEN_HEIGHT
 
+def get_color_mode():
+    return BLIND_MODE
+
+def set_color_mode(v:str):
+    global BLIND_MODE
+    BLIND_MODE = v
+
 def set_screen_size(width, height):
     global SCREEN_HEIGHT
     global SCREEN_WIDTH
@@ -71,16 +75,16 @@ KEYBOARD_MAP = {
 
     # Add more key-action mappings here
 }
-def set_keyboard_map(up, down, left, right):
+def set_keyboard_map(up, down, left, right, enter):
     global KEYBOARD_MAP
     KEYBOARD_MAP = {
         up: action_name.MOVE_UP,
         down: action_name.MOVE_DOWN,
         left: action_name.MOVE_LEFT,
         right: action_name.MOVE_RIGHT,
+        enter: action_name.RETURN,
         pygame.K_SPACE: action_name.FIRE,
         pygame.K_ESCAPE: action_name.PAUSE,
-        pygame.K_RETURN: action_name.RETURN,
     }
 
 def vw(width):
