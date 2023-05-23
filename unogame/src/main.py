@@ -11,11 +11,13 @@ from config import get_screen_width, get_screen_height, vw, vh, configuration
 from assets.image_loader import ImageLoader
 
 # Initialize pygame and create a window
-pygame.init()
-screen = pygame.display.set_mode((get_screen_width(), get_screen_height()))
 loop = asyncio.get_event_loop()
 loop.run_until_complete(configuration.load_config_from_file())
 loop.close()
+
+pygame.init()
+print("Game Start!")
+screen = pygame.display.set_mode((get_screen_width(), get_screen_height()))
 pygame.display.set_caption("UnoCatMe")
 INIT_SCREEN_WIDTH = get_screen_width()
 
@@ -29,10 +31,7 @@ overlay_manager.set_visual_debug_mode(True)
 # Set up clock for controlling the frame rate
 clock = pygame.time.Clock()
 
-#image_loader = ImageLoader()
-# Create a SceneManager instance
 scene_manager = SceneManager(screen, gui_manager, overlay_manager)
-
 
 while True:
     time_delta = clock.tick(60) / 1000.0

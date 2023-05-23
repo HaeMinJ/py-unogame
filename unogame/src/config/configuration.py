@@ -11,15 +11,28 @@ import unittest
 BLIND_MODE = blind_mode_name.DEFAULT
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
-CURRENT_STAGE = 0
-SOUND_VOLUME = 30
+CURRENT_STAGE = 3
+WHOLE_SOUND_VOLUME = 30
+BACKGROUND_SOUND_VOLUME = 30
+EFFECT_SOUND_VOLUME = 30
 SOUND_ON = True
 
-def set_sound_volume(v:int):
-    global SOUND_VOLUME
-    SOUND_VOLUME = v
-def get_sound_volume():
-    return SOUND_VOLUME
+def set_whole_sound_volume(v:int):
+    global WHOLE_SOUND_VOLUME
+    WHOLE_SOUND_VOLUME = v
+def set_background_sound_volume(v:int):
+    global BACKGROUND_SOUND_VOLUME
+    BACKGROUND_SOUND_VOLUME = v
+def set_effect_sound_volume(v:int):
+    global EFFECT_SOUND_VOLUME
+    EFFECT_SOUND_VOLUME = v
+
+def get_whole_sound_volume():
+    return WHOLE_SOUND_VOLUME
+def get_background_sound_volume():
+    return BACKGROUND_SOUND_VOLUME
+def get_effect_sound_volume():
+    return EFFECT_SOUND_VOLUME
 def set_sound_on():
     global SOUND_ON
     SOUND_ON = True
@@ -34,6 +47,13 @@ def get_screen_width():
 
 def get_screen_height():
     return SCREEN_HEIGHT
+
+def get_color_mode():
+    return BLIND_MODE
+
+def set_color_mode(v:str):
+    global BLIND_MODE
+    BLIND_MODE = v
 
 def set_screen_size(width, height):
     global SCREEN_HEIGHT
@@ -50,9 +70,22 @@ KEYBOARD_MAP = {
     pygame.K_RIGHT: action_name.MOVE_RIGHT,
     pygame.K_SPACE: action_name.FIRE,
     pygame.K_ESCAPE: action_name.PAUSE,
-    pygame.K_RETURN: action_name.RETURN
+    pygame.K_RETURN: action_name.RETURN,
+    pygame.K_c: action_name.CARD_GIVER
+
     # Add more key-action mappings here
 }
+def set_keyboard_map(up, down, left, right, enter):
+    global KEYBOARD_MAP
+    KEYBOARD_MAP = {
+        up: action_name.MOVE_UP,
+        down: action_name.MOVE_DOWN,
+        left: action_name.MOVE_LEFT,
+        right: action_name.MOVE_RIGHT,
+        enter: action_name.RETURN,
+        pygame.K_SPACE: action_name.FIRE,
+        pygame.K_ESCAPE: action_name.PAUSE,
+    }
 
 def vw(width):
     return (width * SCREEN_WIDTH) / 1280
@@ -78,7 +111,9 @@ def save_config_to_file():
         "SCREEN_WIDTH" : SCREEN_WIDTH,
         "keybinding" : keybindings,
         "CURRENT_STAGE": CURRENT_STAGE,
-        "SOUND_VOLUME":SOUND_VOLUME,
+        "WHOLE_SOUND_VOLUME" : WHOLE_SOUND_VOLUME,
+        "BACKGROUND_SOUND_VOLUME" : BACKGROUND_SOUND_VOLUME,
+        "EFFECT_SOUND_VOLUME" : EFFECT_SOUND_VOLUME,
         "SOUND_ON":SOUND_ON
     }
     with open("config.json", "w") as f:
@@ -94,15 +129,18 @@ async def load_config_from_file():
         "SCREEN_WIDTH": SCREEN_WIDTH,
         "keybinding": KEYBOARD_MAP,
         "CURRENT_STAGE": CURRENT_STAGE,
-        "SOUND_VOLUME": SOUND_VOLUME,
+        "WHOLE_SOUND_VOLUME": WHOLE_SOUND_VOLUME,
+        "BACKGROUND_SOUND_VOLUME": BACKGROUND_SOUND_VOLUME,
+        "EFFECT_SOUND_VOLUME": EFFECT_SOUND_VOLUME,
         "SOUND_ON": SOUND_ON
     }
     try:
-        with open(filename, "a") as f:
+        with open(filename, "r") as f:
             configurations = json.load(f)
             convert_to_current_config(configurations)
             convert_keybinding(configurations["keybinding"])
             pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
     except FileNotFoundError:
         print(f"The file '{filename}' does not exist. Creating a new file.")
         with open(filename, 'w') as file:
@@ -119,7 +157,9 @@ def convert_to_current_config(configurations):
     global SCREEN_WIDTH
     global SCREEN_HEIGHT
     global CURRENT_STAGE
-    global SOUND_VOLUME
+    global WHOLE_SOUND_VOLUME
+    global BACKGROUND_SOUND_VOLUME
+    global EFFECT_SOUND_VOLUME
     global SOUND_ON
     try:
         BLIND_MODE=configurations["BLIND_MODE"]
@@ -127,10 +167,12 @@ def convert_to_current_config(configurations):
         SCREEN_HEIGHT=configurations["SCREEN_HEIGHT"]
         CURRENT_STAGE=configurations["CURRENT_STAGE"]
         SOUND_ON=configurations["SOUND_ON"]
-        SOUND_VOLUME=configurations["SOUND_VOLUME"]
+        WHOLE_SOUND_VOLUME = configurations["WHOLE_SOUND_VOLUME"]
+        BACKGROUND_SOUND_VOLUME = configurations["BACKGROUND_SOUND_VOLUME"]
+        EFFECT_SOUND_VOLUME = configurations["EFFECT_SOUND_VOLUME"]
+
     except(KeyError):
         print("No Initial config valid.")
-
 
 def convert_keybinding(keybindings):
     global KEYBOARD_MAP

@@ -17,8 +17,8 @@ class MenuScene(Scene):
         self.create_scrollable_buttons()
         self.create_below_buttons()
 
-    def __init__(self, screen, gui_manager, params=None):
-        super().__init__(screen, gui_manager, params)
+    def __init__(self, screen, gui_manager, params=None, server=None):
+        super().__init__(screen, gui_manager, params, server)
 
         self.sound_toggle_button = None
         self.state = MenuState()
@@ -40,7 +40,7 @@ class MenuScene(Scene):
             manager=self.gui_manager
         )
 
-        self.scroll_buttons_text = ["Single Play", "StoryMode Play"]
+        self.scroll_buttons_text = ["Single Play", "StoryMode Play", "Multi Play"]
 
         self.scrollable_buttons = []
         self.scroll_offset_x = 0
@@ -114,7 +114,6 @@ class MenuScene(Scene):
                     self.state.start_single_play()
                 elif event.ui_element == self.scrollable_buttons[1]:
                     self.state.open_story_play()
-
                 elif event.ui_element == self.scrollable_buttons[2]:
                     self.state.open_multi_play()
                 elif event.ui_element == self.focusable_buttons[4]:
@@ -139,11 +138,11 @@ class MenuScene(Scene):
         if event.type == pygame.KEYDOWN:
             key_event = event.key
             action = get_action(key_event)
+
             if action == action_name.MOVE_UP or action == action_name.MOVE_LEFT:
                 self.current_focused_button = (self.current_focused_button - 1) % len(self.focusable_buttons)
                 self.gui_manager.set_focus_set(self.focusable_buttons[self.current_focused_button])
                 print(self.gui_manager.get_focus_set(), self.current_focused_button)
-
             if action == action_name.MOVE_DOWN or action == action_name.MOVE_RIGHT:
                 self.current_focused_button = (self.current_focused_button + 1) % len(self.focusable_buttons)
                 self.gui_manager.set_focus_set(self.focusable_buttons[self.current_focused_button])
@@ -158,12 +157,14 @@ class MenuScene(Scene):
                     self.state.start_single_play()
                 elif ui_element == self.scrollable_buttons[1]:
                     self.state.open_story_play()
-
                 elif ui_element == self.scrollable_buttons[2]:
                     self.state.open_multi_play()
                 elif ui_element == self.focusable_buttons[2]:
                     self.state.open_achievement()  # self.state.open_configuration()
+
                 elif ui_element == self.focusable_buttons[4]:
+                    self.state.open_configuration()
+                elif ui_element == self.focusable_buttons[5]:
                     self.state.exit()
 
 

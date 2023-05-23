@@ -9,8 +9,8 @@ from config import get_screen_width, get_screen_height, vw, vh
 from utils.image_utility import load_image
 
 class LandingScene(Scene):
-    def __init__(self, screen, gui_manager, params=None):
-        super().__init__(screen, gui_manager, params)
+    def __init__(self, screen, gui_manager, params=None, server=None):
+        super().__init__(screen, gui_manager, params, server)
         self.state = LandingState()
         self.logo_image = load_image("logo.png")
         self.single_play_button = pygame_gui.elements.UIButton(

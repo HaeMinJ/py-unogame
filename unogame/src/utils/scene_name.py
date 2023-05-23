@@ -12,3 +12,4 @@ MULTI_ACCESS_SCENE = "multi_access_scene"
 MULTI_PASSWORD_SCENE = "multi_password_scene"
 MULTI_IP_SCENE = "multi_ip_scene"
 MULTI_GAME_SCENE = "multi_game_scene"
+

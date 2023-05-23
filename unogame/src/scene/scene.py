@@ -4,13 +4,14 @@ from abc import abstractmethod
 class Scene:
 
 
-    def __init__(self, screen, gui_manager, params=None):
+    def __init__(self, screen, gui_manager, params=None, server=None):
         self.screen = screen
         self.gui_manager = gui_manager
         self.params = params
         self.state = None
         self.gui_manager.clear_and_reset()
         self.focusable_buttons = []
+        self.server = server
         pass
 
     @abstractmethod
