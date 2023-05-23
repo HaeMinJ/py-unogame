@@ -51,7 +51,7 @@ class MultiAccessScene(Scene):
             relative_rect=pygame.Rect(vp(890, 300), vp(235, 52)),
             manager=self.gui_manager,
         )
-        self.text_input_password.visible = False
+        self.text_input_password.visible = True
 
         self.player_name = ""
         self.game_ip = "123.123.123"
@@ -110,7 +110,7 @@ class MultiAccessScene(Scene):
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.focusable_buttons[2]:
-                    self.state.connect_server(self.input_ip,"asdf1234")
+                    self.state.connect_server(self.input_ip,self.text_input_password.get_text(), self.text_input_name.get_text())
                     if self.input_ip == self.game_ip:
                         self.is_password_access = True
                     if self.is_password_access == True:

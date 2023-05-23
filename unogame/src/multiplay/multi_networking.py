@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pickle
 import socket
 
@@ -22,8 +24,8 @@ class MultiNetworking:
     def _connect(self, address, port):
         self.sock.connect((address, port))
 
-    def access_lobby(self, password):
-        data = {'type': 'access', 'password': password}
+    def access_lobby(self, password, username):
+        data = {'type': 'access', 'password': password, 'username': username}
         self.sock.sendall(pickle.dumps(data))
         answer = pickle.loads(self.sock.recv(2048))
         print(answer)

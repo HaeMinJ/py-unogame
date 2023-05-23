@@ -3,6 +3,7 @@ import pygame_gui
 from pygame_gui.core import ObjectID
 import socket
 
+from classes.auth.ai_user import AIUser
 from config.configuration import get_screen_width, get_screen_height, vw, vh, vp, KEYBOARD_MAP, get_action
 
 from scene import Scene
@@ -81,6 +82,7 @@ class MultiRobbyScene(Scene):
                 if event.ui_element == self.move_scene_buttons[0]:
                     self.state.move_scene(scene_name.MULTI_PASSWORD_SCENE)
                 if event.ui_element == self.move_scene_buttons[1]:
+                    self.state.move_scene(scene_name.PLAYING_SCENE, [User(0,"Me",is_ai=False), AIUser(1, "Minsu",is_ai=True) ])
                     pass
 
     def draw(self):
