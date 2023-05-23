@@ -15,6 +15,6 @@ class MultiAccessState(GameState):
         if event.type == self.timer_event:
             self.move_scene(scene_name.MAIN_MENU)
 
-    def connect_server(self, SERVER_IP, PASSWORD):
+    def connect_server(self, SERVER_IP, PASSWORD, USERNAME):
         networking = MultiNetworking(SERVER_IP)
-        networking.access_lobby(PASSWORD)
+        networking.access_lobby(PASSWORD, USERNAME)

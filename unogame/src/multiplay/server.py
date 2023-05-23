@@ -99,9 +99,10 @@ class Server:
             match loaded_data['type']:
                 case "access":
                     password = loaded_data['password']
+                    username = loaded_data['username']
                     if password == self.password:
                         answer = "allow"
-                        user = User(len(self.current_game.users), "Player"+str(len(self.current_game.users)))
+                        user = User(len(self.current_game.users), username)
                         user.deck.init_random()
                         user.address = address
                         self.current_game.append_user(user)
