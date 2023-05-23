@@ -67,7 +67,8 @@ KEYBOARD_MAP = {
     pygame.K_SPACE: action_name.FIRE,
     pygame.K_ESCAPE: action_name.PAUSE,
     pygame.K_RETURN: action_name.RETURN,
-    pygame.K_c: action_name.CARD_GIVER
+    pygame.K_c: action_name.CARD_GIVER,
+    pygame.K_x: action_name.EXIT
 
     # Add more key-action mappings here
 }

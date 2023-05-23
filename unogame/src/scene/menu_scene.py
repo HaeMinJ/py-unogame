@@ -116,9 +116,9 @@ class MenuScene(Scene):
                     self.state.open_story_play()
                 elif event.ui_element == self.scrollable_buttons[2]:
                     self.state.open_multi_play()
-                elif event.ui_element == self.focusable_buttons[4]:
+                elif event.ui_element == self.focusable_buttons[3]:
                     self.state.open_configuration()
-                elif event.ui_element == self.focusable_buttons[4]:
+                elif event.ui_element == self.focusable_buttons[5]:
                     self.state.exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 4 or event.button == 1:  # Mouse wheel up
@@ -158,7 +158,7 @@ class MenuScene(Scene):
                     self.state.open_story_play()
                 elif ui_element == self.scrollable_buttons[2]:
                     self.state.open_multi_play()
-                elif ui_element == self.focusable_buttons[4]:
+                elif ui_element == self.focusable_buttons[3]:
                     self.state.open_configuration()
                 elif ui_element == self.focusable_buttons[5]:
                     self.state.exit()
