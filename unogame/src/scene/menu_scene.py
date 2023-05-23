@@ -116,10 +116,11 @@ class MenuScene(Scene):
                     self.state.open_story_play()
                 elif event.ui_element == self.scrollable_buttons[2]:
                     self.state.open_multi_play()
-                elif event.ui_element == self.focusable_buttons[4]:
+                elif event.ui_element == self.focusable_buttons[3]:
                     self.state.open_configuration()
-
                 elif event.ui_element == self.focusable_buttons[4]:
+                    self.state.open_achievement()
+                elif event.ui_element == self.focusable_buttons[5]:
                     self.state.exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 4 or event.button == 1:  # Mouse wheel up
@@ -149,7 +150,7 @@ class MenuScene(Scene):
                 print(self.gui_manager.get_focus_set(), self.current_focused_button)
             # todo: 버튼 포커싱에 맞게 움직이도록 하기.
             if action == action_name.PAUSE:
-                self.state.toggle_achievement()
+                self.state.toggle_configuration()
 
             if action == action_name.RETURN:
                 ui_element = self.focusable_buttons[self.current_focused_button]
