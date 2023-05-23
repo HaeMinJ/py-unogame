@@ -2,6 +2,7 @@ import pygame
 import pygame_gui
 from pygame_gui.core import ObjectID
 
+from classes.auth.ai_user import AIUser
 from config.configuration import get_screen_width, get_screen_height, vw, vh, vp, KEYBOARD_MAP, get_action
 
 from scene import Scene
@@ -35,7 +36,7 @@ class LobbyScene(Scene):
         self.player_bg_height = vh(90)
         self.player_bg_margin = vh(13)
 
-        self.players = [User(1, "player1")]
+        self.players = [AIUser(1, "player1")]
         self.set_player_buttons = []
         self.move_scene_buttons = []
 
@@ -123,7 +124,7 @@ class LobbyScene(Scene):
                 ui_element = self.focusable_buttons[self.current_focused_button]
                 if ui_element == self.set_player_buttons[0]:
                     if len(self.players) < 5:
-                        self.players.append(User(len(self.players) + 1, f"player{len(self.players) + 1}", is_ai=True))
+                        self.players.append(AIUser(len(self.players) + 1, f"player{len(self.players) + 1}", is_ai=True))
                 elif ui_element == self.set_player_buttons[1]:
                     if len(self.players) > 1:
                         self.players.pop()
@@ -138,7 +139,7 @@ class LobbyScene(Scene):
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.set_player_buttons[0]:
                     if len(self.players) < 5:
-                        self.players.append(User(len(self.players) + 1, f"player{len(self.players) + 1}", is_ai=True))
+                        self.players.append(AIUser(len(self.players) + 1, f"player{len(self.players) + 1}", is_ai=True))
                 if event.ui_element == self.set_player_buttons[1]:
                     if len(self.players) > 1:
                         self.players.pop()
