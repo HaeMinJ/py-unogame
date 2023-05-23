@@ -39,16 +39,21 @@ class MultiAccessScene(Scene):
 
         self.move_scene_buttons = []
 
+        self.text_input_name= pygame_gui.elements.UITextEntryLine(
+            relative_rect=pygame.Rect(vp(130, 300), vp(235, 52)),
+            manager=self.gui_manager,
+        )
         self.text_input_ip = pygame_gui.elements.UITextEntryLine(
-            relative_rect=pygame.Rect(vp(223, 250), vp(235, 52)),
+            relative_rect=pygame.Rect(vp(523, 250), vp(235, 52)),
             manager=self.gui_manager,
         )
         self.text_input_password = pygame_gui.elements.UITextEntryLine(
-            relative_rect=pygame.Rect(vp(690, 300), vp(235, 52)),
+            relative_rect=pygame.Rect(vp(890, 300), vp(235, 52)),
             manager=self.gui_manager,
         )
         self.text_input_password.visible = False
 
+        self.player_name = ""
         self.game_ip = "123.123.123"
         self.input_ip = ""
         self.game_password = "123123"
@@ -82,7 +87,7 @@ class MultiAccessScene(Scene):
 
     def create_access_buttons(self):
         btn_ip_access = FocusableUIButton(
-            relative_rect=pygame.Rect(vw(260), vh(400), vw(160), vh(83)),
+            relative_rect=pygame.Rect(vw(560), vh(400), vw(160), vh(83)),
             text="",
             manager=self.gui_manager,
             object_id=ObjectID(object_id=f"button_b_1", class_id="@lobby_add_btns")
@@ -93,6 +98,8 @@ class MultiAccessScene(Scene):
 
     def process_events(self, event):
         if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
+            if event.ui_element == self.text_input_name:
+                self.player_name = self.text_input_name
             if event.ui_element == self.text_input_ip:
                 self.input_ip = self.text_input_ip.get_text()
             if event.ui_element == self.text_input_password:
@@ -117,24 +124,27 @@ class MultiAccessScene(Scene):
     def draw(self):
         font = pygame.font.SysFont('arial', 30)
         text_title = font.render("Input Game IP", True, (255, 255, 255))
+        text_name = font.render("Input Name", True, (255, 255, 255))
         text_enter = font.render("ACCESS", True, (0, 0, 0))
 
         text_password_title = font.render("Input Password", True, (255, 255, 255))
         text_enter_second = font.render("Press Enter Setting", True, (255, 255, 255))
 
         self.screen.blit(self.lobby_image, (0, 0))
-        self.screen.blit(self.player_bg, vp(172, 109))
-
-        self.screen.blit(self.input_password_bg, vp(get_screen_width() / 2, 109))
+        self.screen.blit(self.player_bg, vp(472, 109))
+        self.screen.blit(self.player_bg, vp(72, 109))
+        self.screen.blit(self.input_password_bg, vp(get_screen_width() / 2 + 200, 109))
 
         self.gui_manager.draw_ui(self.screen)
 
-        self.screen.blit(text_title, vp(240, 180))
-        self.screen.blit(text_enter, vp(280, 420))
-        self.screen.blit(text_enter_second, vp(210, 330))
+        self.screen.blit(text_name, vp(150, 180))
+        self.screen.blit(text_title, vp(540, 180))
+        self.screen.blit(text_enter, vp(580, 420))
+        self.screen.blit(text_enter_second, vp(120, 420))
+        self.screen.blit(text_enter_second, vp(510, 330))
 
 
-        self.screen.blit(text_password_title,  vp(700, 180))
-        self.screen.blit(text_enter_second, vp(680, 400))
+        self.screen.blit(text_password_title,  vp(900, 180))
+        self.screen.blit(text_enter_second, vp(880, 400))
 
 
