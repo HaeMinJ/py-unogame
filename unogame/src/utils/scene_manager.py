@@ -5,6 +5,7 @@ import pygame
 from classes.auth.ai_user import AIUser
 from classes.auth.user import User
 from classes.game.networking import Networking
+from scene.achievement_scene import AchievementOverlayScene
 from scene.lobby_scene import LobbyScene
 from scene.main_screen import MainScreen
 from scene.multi_access_scene import MultiAccessScene
@@ -57,10 +58,12 @@ class SceneManager:
             scene_name.MULTI_ROBBY_SCENE: MultiRobbyScene
         }
         self.overlay_scenes = {
-            overlay_name.CONFIGURATION: ConfigurationOverlayScene
+            overlay_name.CONFIGURATION: ConfigurationOverlayScene,
+            overlay_name.ACHIEVEMENT: AchievementOverlayScene
         }
         self.current_sound = self.sounds["LOBBY"]
         self.current_sound.play()
+
         params = [User(0, "Me"), AIUser(1, "Computer1", is_ai=True), AIUser(2, "Computer2", is_ai=True),
                        AIUser(3, "Computer3", is_ai=True)]
 
