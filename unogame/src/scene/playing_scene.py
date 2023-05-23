@@ -21,7 +21,7 @@ from utils.card_utility import card_image, random_cards
 from utils.resource_path import resource_path
 from widgets import FocusableUIButton
 from utils.image_utility import load_image
-
+from states import GameState
 
 class Cards(pygame.sprite.Sprite):
     CARD_END = pygame.event.custom_type()
@@ -400,6 +400,7 @@ class PlayingScene(Scene):
         self._miscellaneous_group.handle_events(event)
         cur_user = self.networking.get_user_from_game()
 
+
         for i in range(len(self.all_players)):
             if len(self.all_players[i].deck.cards) <= 0:
                 params = {
@@ -421,11 +422,16 @@ class PlayingScene(Scene):
             action = get_action(key_event)
             if action == action_name.PAUSE:
                 self.state.active_overlay(overlay_name.CONFIGURATION)
+            if action == action_name.FIRE:
+                self.state.move_menu_scene()
+
         if event.type == self.TURN_TIME_EVENT_CODE:
             self.turn_time -= 1
             if self.turn_time <= 0:
                 self.turn_time = 30
                 self.networking.get_card()
+
+
 
     def draw_special_card(self, card):
         if card == 1 :
